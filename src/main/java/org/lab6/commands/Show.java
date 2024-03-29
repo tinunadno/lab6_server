@@ -6,7 +6,7 @@ import org.lab6.mainClasses.Message;
 public class Show extends Command {
 	@Override
 	public void execute(){
-		new Message(LabWorkListManager.getCollectionAsString());
+		Message.append(LabWorkListManager.getCollectionAsString());
 	}
 	@Override
 	public String getComment(){

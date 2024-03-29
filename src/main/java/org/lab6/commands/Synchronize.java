@@ -5,7 +5,6 @@ import org.lab6.mainClasses.Message;
 
 public class Synchronize extends Command{
     public void execute(){
-
         CommandListSynchronizer.synchronizeCommandListWithClient();
     }
     public String getComment(){

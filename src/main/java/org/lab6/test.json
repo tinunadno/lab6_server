@@ -1,48 +1,6 @@
 {
 "LabWorks": [
 {
-"name": "l27",
-"Coordinates": {
-"x": 3.5,
-"y": 6
-},
-"minimalPoint": 10.0,
-"description": "very fun lab",
-"tunedInWorks": 10,
-"Difficulty": "INSANE",
-"Person": {
-	"name": "dude",
-	"passportID": "5684231675648516",
-	"eyeColor": "WHITE",
-	"Location": {
-"x": 1.6,
-"y": 2.545,
-"name": "Sitniy Rinok"
-}
-}
-},
-{
-"name": "lab35",
-"Coordinates": {
-"x": 7.6,
-"y": 4
-},
-"minimalPoint": 1000.0,
-"description": "hard as fuck",
-"tunedInWorks": 0,
-"Difficulty": "TERRIBLE",
-"Person": {
-	"name": "One corean guy",
-	"passportID": "568423141561654675648516",
-	"eyeColor": "RED",
-	"Location": {
-"x": 3.54,
-"y": 80.5,
-"name": "Sitniy Rinok"
-}
-}
-},
-{
 "name": "lab34",
 "Coordinates": {
 "x": 3.5,
@@ -60,6 +18,48 @@
 "x": 1.6,
 "y": 2.545,
 "name": "Sitniy Rinok"
+}
+}
+},
+{
+"name": "1",
+"Coordinates": {
+"x": 1.0,
+"y": 1
+},
+"minimalPoint": 1.0,
+"description": "1",
+"tunedInWorks": 1,
+"Difficulty": "VERY_HARD",
+"Person": {
+	"name": "1",
+	"passportID": "123123123123123",
+	"eyeColor": "RED",
+	"Location": {
+"x": 1.0,
+"y": 1.0,
+"name": "1"
+}
+}
+},
+{
+"name": "asd",
+"Coordinates": {
+"x": 123.0,
+"y": 123
+},
+"minimalPoint": 123.0,
+"description": "123",
+"tunedInWorks": 123,
+"Difficulty": "VERY_HARD",
+"Person": {
+	"name": "123",
+	"passportID": "123123123123",
+	"eyeColor": "RED",
+	"Location": {
+"x": 123.0,
+"y": 123.0,
+"name": "123"
 }
 }
 }
