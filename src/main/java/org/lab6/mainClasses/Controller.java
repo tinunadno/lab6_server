@@ -27,7 +27,6 @@ public class Controller {
 		comands.put("print_field_ascending_difficulty", new PrintFieldAscendingDifficulty());
 		comands.put("min_by_name", new MinByName());
 		comands.put("sort", new Sort());
-		comands.put("save", new SaveOnServer());
 		comands.put("synchronize", new Synchronize());
 		comands.put("shot_down", new ShotDown());
 		comands.put("get_list_as_json", new GetListAsJson());
@@ -41,7 +40,7 @@ public class Controller {
 		try{
 		comands.get(key).execute();
 		}catch(NullPointerException e){
-			new Message("\""+key+"\" is not a command, use help for syntax");
+			Message.append("\""+key+"\" is not a command, use help for syntax");
 		}
 	}
 
@@ -55,7 +54,7 @@ public class Controller {
 			((CommandWithArgument)(comands.get(key))).setArgument(argument);
 			comands.get(key).execute();
 		}catch(NullPointerException e){
-			new Message("\""+key+"\" is not a command, use help for syntax");
+			Message.append("\""+key+"\" is not a command, use help for syntax");
 		}
 	}
 	public static void invoke(String key, LabWork labWork){
@@ -63,7 +62,7 @@ public class Controller {
 			((CommandWithParsedInstance)(comands.get(key))).setParsedInstance(labWork);
 			comands.get(key).execute();
 		}catch(NullPointerException e){
-			new Message("\""+key+"\" is not a command, use help for syntax");
+			Message.append("\""+key+"\" is not a command, use help for syntax");
 		}
 	}
 
@@ -73,7 +72,7 @@ public class Controller {
 			((CommandWithArgument)(comands.get(key))).setArgument(argument);
 			comands.get(key).execute();
 		}catch(NullPointerException e){
-			new Message("\""+key+"\" is not a command, use help for syntax");
+			Message.append("\""+key+"\" is not a command, use help for syntax");
 		}
 	}
 
@@ -85,7 +84,7 @@ public class Controller {
 		for (Command value : comands.values()) {
 			ret+=(value.getComment().replace("%", "   "))+"\n";
 		}
-		new Message(ret);
+		Message.append(ret);
 	}
 	public static ArrayList<ArrayList<String>> getSortedCommands(){
 		ArrayList<String> commandsWithNoArgument=new ArrayList<>();

@@ -17,10 +17,13 @@ public class Main {
             if(((Message) bootOption).getMessage().equals("server_boot")){
                 try {
                     LabWorkListManager.init(JsonToLabWork.getLabWork("src/main/java/org/lab6/test.json"));
+                    Message.append("successfully booted from server");
                 }catch(FileNotFoundException e){
                     System.out.println("VERY BAD, I LOST MY BOOT FILE");
+                    Message.append("fail booting from server");
                     LabWorkListManager.init(new ArrayList<>());
                 }
+                Message.sentMessage();
             }
         }else if(bootOption instanceof ArrayList<?>){
             LabWorkListManager.init((ArrayList<LabWork>) bootOption);

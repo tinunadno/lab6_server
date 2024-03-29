@@ -32,7 +32,7 @@ public class LabWorkListManager {
 	
 	public static void append(LabWork lw){
 		list.add(lw);
-		new Message("successfully added new instance");
+		Message.append("successfully added new instance");
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class LabWorkListManager {
 	 */
 	public static void set(int id, LabWork lw){
 		list.set(id, lw);
-		new Message("successfully updated instance with id: "+id);
+		Message.append("successfully updated instance with id: "+id);
 	}
 
 	/**
@@ -54,10 +54,10 @@ public class LabWorkListManager {
 
 		try{
 			list.remove(id);
-			new Message("successfully removed instance with index " + id);
+			Message.append("successfully removed instance with index " + id);
 		}
 		catch(IndexOutOfBoundsException e){
-			new Message("this index doesnt exists");
+			Message.append("this index doesnt exists");
 		}
 	}
 
@@ -67,7 +67,7 @@ public class LabWorkListManager {
 	public static void clear(){
 		Person.clearPassportBase();
 		list.clear();
-		new Message("successfully cleared LabWork Base");
+		Message.append("successfully cleared LabWork Base");
 	}
 
 	/**
@@ -77,9 +77,9 @@ public class LabWorkListManager {
 	public static void save(String way){
 		try (var fw = new FileWriter(way)) {
 			fw.write(toJson());
-			new Message("successfully saved current LabWork List on server");
+			Message.append("successfully saved current LabWork List on server");
 		} catch (Exception e) {
-			new Message("bad file name");
+			Message.append("bad file name");
 		}
 	}
 
@@ -101,7 +101,7 @@ public class LabWorkListManager {
 	public static void RemoveGreater(float val){
 		for(int i=0;i<list.size();i++)
 			if(list.get(i).getMinimalPoint()>val)remove(i);
-		new Message("remove greater");
+		Message.append("remove greater");
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class LabWorkListManager {
 		String ret="";
 		for(int i=0;i<list.size();i++)
 			if(list.get(i).getDescription().equals(description))ret+=(list.get(i).toString()+"\n")+"\n";
-		new Message(ret);
+		Message.append(ret);
 	}
 
 	/**
@@ -123,7 +123,7 @@ public class LabWorkListManager {
 		for(Difficulty diff:Difficulty.values())
 			for(int i=0;i<list.size();i++)
 				if(list.get(i).getDifficulty()==diff)ret+=(list.get(i).toString()+"\n")+"\n";
-		new Message(ret);
+		Message.append(ret);
 	}
 
 	/**
@@ -134,10 +134,10 @@ public class LabWorkListManager {
 			LabWork lw=list.get(0);
 			for(int i=1;i<list.size();i++)
 				if(lw.getName().length()>list.get(i).getName().length())lw=list.get(i);
-			new Message(lw.toString());
+			Message.append(lw.toString());
 		}
 		else {
-			new Message("list is empty");
+			Message.append("list is empty");
 		}
 	}
 

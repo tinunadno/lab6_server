@@ -13,6 +13,8 @@ public class ClientCommandManager {
             else if(sendedCommand.isNeedParsedInstance()) Controller.invoke(sendedCommand.getCommandName(),
                     sendedCommand.getParsedInstance());
             else Controller.invoke(sendedCommand.getCommandName());
+            if(!Message.isEmpty())
+            Message.sentMessage();
         }
     }
 }

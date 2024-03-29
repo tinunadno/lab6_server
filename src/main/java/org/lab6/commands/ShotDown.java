@@ -1,11 +1,15 @@
 package org.lab6.commands;
 
+import org.lab6.Main;
 import org.lab6.mainClasses.Message;
+import org.lab6.mainClasses.LabWorkListManager;
+import org.lab6.mainClasses.UDP_transmitter;
 
 public class ShotDown extends Command{
     @Override
     public void execute(){
-        new Message("shotting down...");
+        LabWorkListManager.save("./src/main/java/org/lab6/test.json");
+        UDP_transmitter.send(Main.getPort(),Main.getAdress(),new Message());
         System.exit(0);
     }
     @Override
