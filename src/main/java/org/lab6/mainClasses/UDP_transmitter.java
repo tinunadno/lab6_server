@@ -1,63 +1,90 @@
 package org.lab6.mainClasses;
 
+import org.lab6.Main;
+
 import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-
-import org.lab6.Main;
-import org.lab6.mainClasses.SendedCommand;
+import java.net.SocketException;
 
 public class UDP_transmitter {
     public static void send(int port, InetAddress host, Object object){
+        DatagramSocket ds=null;
         try {
-            DatagramSocket ds = new DatagramSocket();
-
-            //Serializing Object
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ds = new DatagramSocket();
+        }catch(SocketException e){
+            System.out.println("can't create datagramSocket");
+        }
+        //Serializing Object
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try {
             ObjectOutputStream oos = new ObjectOutputStream(bos);
             oos.writeObject(object);
             oos.close();
-            byte[] objBytes = bos.toByteArray();
-
-            //sending serialized object info
-            byte[] len={(byte)(objBytes.length-(int)(objBytes.length/128)*128), (byte)(objBytes.length/128)};
-            DatagramPacket dp=new DatagramPacket(len, 2, host, port);
-            ds.send(dp);
-            //sending object
-            dp=new DatagramPacket(objBytes, objBytes.length, host, port);
-            ds.send(dp);
-            ds.close();
-            Main.incPort();
-
-        }catch(Exception e){
-            System.out.println(e.getCause());
-            System.out.println(e.getMessage());
+        }catch(IOException e){
+            System.out.println("can't serialize object");
         }
-    }
-    public static<T> T get(int port){
-        try {
-            DatagramSocket ds = new DatagramSocket(port);
-            //getting object info
-            byte[] len=new byte[2];
-            DatagramPacket dp = new DatagramPacket(len, 2);
-            ds.receive(dp);
-            if(Main.getAdress()==null)
-                Main.setInetAdress(dp.getAddress());
+        byte[] objBytes = bos.toByteArray();
 
-            //getting object
-            byte[] arr = new byte[len[1]*128+len[0]];
-            dp = new DatagramPacket(arr, len[1]*128+len[0]);
+        //sending serialized object info
+        byte[] len={(byte)(objBytes.length-(int)(objBytes.length/128)*128), (byte)(objBytes.length/128)};
+        DatagramPacket dp=new DatagramPacket(len, 2, host, port);
+        try {
+            ds.send(dp);
+        }catch (IOException e){
+            System.out.println("can't send this Buffer");
+        }
+
+        //sending object
+        dp=new DatagramPacket(objBytes, objBytes.length, host, port);
+        try {
+            ds.send(dp);
+        }catch (IOException e){
+            System.out.println("can't send this Buffer");
+        }
+        ds.close();
+        Main.incPort();
+    }
+
+    public static<T> T get(int port){
+        DatagramSocket ds=null;
+        try {
+            ds = new DatagramSocket(port);
+        }catch(SocketException e){
+            System.out.println("can't create DatagramSocket");
+        }
+        //ds.setSoTimeout(1000);
+        //getting object info
+        byte[] len=new byte[2];
+        DatagramPacket dp = new DatagramPacket(len, 2);
+        try {
             ds.receive(dp);
-            //deserializing object
-            ByteArrayInputStream bis = new ByteArrayInputStream(arr);
+        }catch (IOException e){
+            System.out.println("can't recieve message");
+        }
+        if(Main.getAdress()==null)
+            Main.setInetAdress(dp.getAddress());
+        //getting object
+        byte[] arr = new byte[len[1]*128+len[0]];
+        dp = new DatagramPacket(arr, len[1]*128+len[0]);
+        try {
+            ds.receive(dp);
+        }catch (IOException e){
+            System.out.println("can't recieve message");
+        }
+        ds.close();
+        //deserializing object
+        ByteArrayInputStream bis = new ByteArrayInputStream(arr);
+        try {
             ObjectInput in = new ObjectInputStream(bis);
             Main.incPort();
-            return (T)in.readObject();
+            return (T) in.readObject();
+        }catch(IOException e){
+            System.out.println("can't deserialize object");
 
-        }catch(Exception e){
-            System.out.println(e.getCause());
-            System.out.println(e.getMessage());
+        }catch (ClassNotFoundException e){
+            System.out.println("can't find object class");
         }
         return null;
     }
