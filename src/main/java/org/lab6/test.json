@@ -62,6 +62,27 @@
 "name": "123"
 }
 }
+},
+{
+"name": "asd",
+"Coordinates": {
+"x": 1.0,
+"y": 1
+},
+"minimalPoint": 1.0,
+"description": "1",
+"tunedInWorks": 1,
+"Difficulty": "VERY_HARD",
+"Person": {
+	"name": "11",
+	"passportID": "112312312398",
+	"eyeColor": "RED",
+	"Location": {
+"x": 1.0,
+"y": 1.0,
+"name": "1"
+}
+}
 }
 ]
 }

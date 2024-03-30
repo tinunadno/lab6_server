@@ -1,15 +1,18 @@
 package org.lab6.commands;
 
+import org.lab6.Main;
 import org.lab6.mainClasses.LabWorkListManager;
 import org.lab6.mainClasses.Message;
+import org.lab6.mainClasses.ResponseManager;
+import org.lab6.mainClasses.UDP_transmitter;
 
 public class GetListAsJson extends Command{
     @Override
     public void execute(){
-        Message json=new Message();
-        Message.append("successfully sent json file");
-        json.append_object(LabWorkListManager.toJson());
-        json.sentMessage_object();
+        Message json=new Message(LabWorkListManager.toJson());
+        ResponseManager.append("successfully sent json file");
+
+        UDP_transmitter.send(Main.getPort(), Main.getAdress(), json);
         try{
             Thread.sleep(100);
         }catch (InterruptedException e){

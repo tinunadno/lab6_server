@@ -2,11 +2,12 @@ package org.lab6.commands;
 
 import org.lab6.mainClasses.LabWorkListManager;
 import org.lab6.mainClasses.Message;
+import org.lab6.mainClasses.ResponseManager;
 
 public class Show extends Command {
 	@Override
 	public void execute(){
-		Message.append(LabWorkListManager.getCollectionAsString());
+		ResponseManager.append(LabWorkListManager.getCollectionAsString());
 	}
 	@Override
 	public String getComment(){

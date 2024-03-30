@@ -48,44 +48,51 @@ public class UDP_transmitter {
     }
 
     public static<T> T get(int port){
-        DatagramSocket ds=null;
-        try {
-            ds = new DatagramSocket(port);
-        }catch(SocketException e){
-            System.out.println("can't create DatagramSocket");
-        }
-        //ds.setSoTimeout(1000);
-        //getting object info
-        byte[] len=new byte[2];
-        DatagramPacket dp = new DatagramPacket(len, 2);
-        try {
-            ds.receive(dp);
-        }catch (IOException e){
-            System.out.println("can't recieve message");
-        }
-        if(Main.getAdress()==null)
-            Main.setInetAdress(dp.getAddress());
-        //getting object
-        byte[] arr = new byte[len[1]*128+len[0]];
-        dp = new DatagramPacket(arr, len[1]*128+len[0]);
-        try {
-            ds.receive(dp);
-        }catch (IOException e){
-            System.out.println("can't recieve message");
-        }
-        ds.close();
-        //deserializing object
-        ByteArrayInputStream bis = new ByteArrayInputStream(arr);
-        try {
-            ObjectInput in = new ObjectInputStream(bis);
-            Main.incPort();
-            return (T) in.readObject();
-        }catch(IOException e){
-            System.out.println("can't deserialize object");
+//        try {
+            DatagramSocket ds = null;
+            try {
+                ds = new DatagramSocket(port);
+            } catch (SocketException e) {
+                System.out.println("can't create DatagramSocket");
+            }
+            //ds.setSoTimeout(1000);
+            //getting object info
+            byte[] len = new byte[2];
+            DatagramPacket dp = new DatagramPacket(len, 2);
+            try {
+                ds.receive(dp);
+            } catch (IOException e) {
+                System.out.println("can't recieve message");
+            }
+            if (Main.getAdress() == null)
+                Main.setInetAdress(dp.getAddress());
+            //getting object
+            byte[] arr = new byte[len[1] * 128 + len[0]];
+            dp = new DatagramPacket(arr, len[1] * 128 + len[0]);
+            try {
+                ds.receive(dp);
+            } catch (IOException e) {
+                System.out.println("can't recieve message");
+            }
 
-        }catch (ClassNotFoundException e){
-            System.out.println("can't find object class");
-        }
+            ds.close();
+
+            //deserializing object
+            ByteArrayInputStream bis = new ByteArrayInputStream(arr);
+            try {
+                ObjectInput in = new ObjectInputStream(bis);
+                Main.incPort();
+                return (T) in.readObject();
+            } catch (IOException e) {
+                System.out.println("can't deserialize object");
+
+            } catch (ClassNotFoundException e) {
+                System.out.println("can't find object class");
+            }
+//        }catch(NullPointerException e){
+//
+//            System.out.println("package is null");
+//        }
         return null;
     }
 }
