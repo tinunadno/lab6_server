@@ -23,7 +23,7 @@ public class Message implements Serializable {
         currentMessage.append_object(word);
     }
     public void sentMessage_object(){
-        UDP_transmitter.send(Main.getPort(), Main.getAdress(), this);
+        UDP_transmitter.send(Main.getServerPort(), Main.getAdress(), this);
 
     }
     public static void sentMessage(){

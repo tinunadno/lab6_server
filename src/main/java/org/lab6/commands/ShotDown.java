@@ -9,7 +9,7 @@ public class ShotDown extends Command{
     @Override
     public void execute(){
         LabWorkListManager.save("./src/main/java/org/lab6/test.json");
-        UDP_transmitter.send(Main.getPort(),Main.getAdress(),new Message());
+        UDP_transmitter.send(Main.getServerPort(),Main.getAdress(),new Message());
         System.exit(0);
     }
     @Override

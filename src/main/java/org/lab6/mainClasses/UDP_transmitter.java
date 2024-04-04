@@ -44,7 +44,6 @@ public class UDP_transmitter {
             System.out.println("can't send this Buffer");
         }
         ds.close();
-        Main.incPort();
     }
 
     public static<T> T get(int port){
@@ -78,7 +77,6 @@ public class UDP_transmitter {
         ByteArrayInputStream bis = new ByteArrayInputStream(arr);
         try {
             ObjectInput in = new ObjectInputStream(bis);
-            Main.incPort();
             return (T) in.readObject();
         }catch(IOException e){
             System.out.println("can't deserialize object");
