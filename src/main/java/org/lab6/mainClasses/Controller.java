@@ -40,9 +40,10 @@ public class Controller {
 		try{
 		comands.get(key).execute();
 		}catch(NullPointerException e){
-			Message.append("\""+key+"\" is not a command, use help for syntax");
+			ResponseManager.append("\""+key+"\" is not a command, use help for syntax");
 		}
 	}
+
 
 	/**
 	 * calls command object with argument
@@ -54,7 +55,7 @@ public class Controller {
 			((CommandWithArgument)(comands.get(key))).setArgument(argument);
 			comands.get(key).execute();
 		}catch(NullPointerException e){
-			Message.append("\""+key+"\" is not a command, use help for syntax");
+			ResponseManager.append("\""+key+"\" is not a command, use help for syntax");
 		}
 	}
 	public static void invoke(String key, LabWork labWork){
@@ -62,7 +63,7 @@ public class Controller {
 			((CommandWithParsedInstance)(comands.get(key))).setParsedInstance(labWork);
 			comands.get(key).execute();
 		}catch(NullPointerException e){
-			Message.append("\""+key+"\" is not a command, use help for syntax");
+			ResponseManager.append("\""+key+"\" is not a command, use help for syntax");
 		}
 	}
 
@@ -72,7 +73,7 @@ public class Controller {
 			((CommandWithArgument)(comands.get(key))).setArgument(argument);
 			comands.get(key).execute();
 		}catch(NullPointerException e){
-			Message.append("\""+key+"\" is not a command, use help for syntax");
+			ResponseManager.append("\""+key+"\" is not a command, use help for syntax");
 		}
 	}
 
@@ -84,7 +85,7 @@ public class Controller {
 		for (Command value : comands.values()) {
 			ret+=(value.getComment().replace("%", "   "))+"\n";
 		}
-		Message.append(ret);
+		ResponseManager.append(ret);
 	}
 	public static ArrayList<ArrayList<String>> getSortedCommands(){
 		ArrayList<String> commandsWithNoArgument=new ArrayList<>();
