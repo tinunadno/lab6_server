@@ -12,7 +12,7 @@ public class GetListAsJson extends Command{
         Message json=new Message(LabWorkListManager.toJson());
         ResponseManager.append("successfully sent json file");
 
-        UDP_transmitter.send(Main.getPort(), Main.getAdress(), json);
+        UDP_transmitter.send(Main.getServerPort(), Main.getAdress(), json);
         try{
             Thread.sleep(100);
         }catch (InterruptedException e){

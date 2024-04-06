@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 public class Main {
     private static int port=6453;
-    private static int serverPort=6454;
-    private static InetAddress adress;
+    private static int serverPort=6464;
+    private static InetAddress adress=null;
 
     public static void main(String[] args) {
 
