@@ -147,7 +147,6 @@ public class LabWorkListManager {
 	 */
 	public static void sort(){
 		Collections.sort(list);
-		Controller.invoke("show");
 	}
 
 	/**

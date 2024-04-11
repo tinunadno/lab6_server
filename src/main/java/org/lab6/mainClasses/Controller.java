@@ -3,11 +3,15 @@ package org.lab6.mainClasses;
 import org.lab6.commands.*;
 import org.lab6.storedClasses.LabWork;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Controller {
+	private int port;
+	private InetAddress address;
+	private ClientCommandManager clientThread;
 	/**
 	 * 	Map with command objects and names
 	 */
@@ -28,17 +32,29 @@ public class Controller {
 		comands.put("min_by_name", new MinByName());
 		comands.put("sort", new Sort());
 		comands.put("synchronize", new Synchronize());
-		comands.put("shot_down", new ShotDown());
+		comands.put("disconnect", new Disconnect());
 		comands.put("get_list_as_json", new GetListAsJson());
+	}
+	public Controller(int port, InetAddress address, ClientCommandManager clientThread){
+		this.port=port;
+		this.address=address;
+		this.clientThread=clientThread;
 	}
 
 	/**
 	 * Calls command object without argument
 	 * @param key
 	 */
-	public static void invoke(String key){
+	public void invoke(String key){
 		try{
-		comands.get(key).execute();
+			Command command=comands.get(key);
+			if(command instanceof ResponseCommand) {
+				((ResponseCommand) command).setAddress(address);
+				((ResponseCommand) command).setPort(port);
+			}
+			if(command instanceof InterruptingCommand)
+				((InterruptingCommand)command).setThread(clientThread);
+			command.execute();
 		}catch(NullPointerException e){
 			ResponseManager.append("\""+key+"\" is not a command, use help for syntax");
 		}
@@ -50,7 +66,7 @@ public class Controller {
 	 * @param key
 	 * @param argument
 	 */
-	public static void invoke(String key, String argument){
+	public void invoke(String key, String argument){
 		try{
 			((CommandWithArgument)(comands.get(key))).setArgument(argument);
 			comands.get(key).execute();
@@ -58,7 +74,7 @@ public class Controller {
 			ResponseManager.append("\""+key+"\" is not a command, use help for syntax");
 		}
 	}
-	public static void invoke(String key, LabWork labWork){
+	public void invoke(String key, LabWork labWork){
 		try{
 			((CommandWithParsedInstance)(comands.get(key))).setParsedInstance(labWork);
 			comands.get(key).execute();
@@ -67,7 +83,7 @@ public class Controller {
 		}
 	}
 
-	public static void invoke(String key, String argument, LabWork labWork){
+	public void invoke(String key, String argument, LabWork labWork){
 		try{
 			((CommandWithParsedInstance)(comands.get(key))).setParsedInstance(labWork);
 			((CommandWithArgument)(comands.get(key))).setArgument(argument);

@@ -1,41 +1,52 @@
 package org.lab6;
 
 import org.lab6.mainClasses.*;
-import org.lab6.storedClasses.LabWork;
 
-import java.io.FileNotFoundException;
 import java.net.InetAddress;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
-
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Driver;
 public class Main {
     private static int port=6453;
+    private static int currentPort=17749;
+    private static int currentServerPort=17750;
     private static int serverPort=6464;
     private static InetAddress adress=null;
+    private static final String psqlUserName="s409324";
+    private static final String psqlPassword="IIcX*5966";
+    private static final String psqlUrl="mysql://g/studs";
+
 
     public static void main(String[] args) {
-
-
-        Object bootOption=UDP_transmitter.get(getPort());
-        if(bootOption instanceof Message){
-            if(((Message) bootOption).getMessage().equals("server_boot")){
-                try {
-                    LabWorkListManager.init(JsonToLabWork.getLabWork("src/main/java/org/lab6/test.json"));
-                    ResponseManager.append("successfully booted from server");
-                }catch(FileNotFoundException e){
-                    System.out.println("VERY BAD, I LOST MY BOOT FILE");
-                    ResponseManager.append("fail booting from server");
-                    LabWorkListManager.init(new ArrayList<>());
-                }
-                ResponseManager.sendMessage();
-            }
-        }else if(bootOption instanceof ArrayList<?>){
-            LabWorkListManager.init((ArrayList<LabWork>) bootOption);
+        try{
+            Class.forName("java.sql.Driver").getDeclaredConstructor().newInstance();
+        }catch(ClassNotFoundException e){
+            e.printStackTrace();
+        }catch(NoSuchMethodException e){
+            e.printStackTrace();
+        }catch(Exception e){}
+        try {
+            Connection conn = DriverManager.getConnection(psqlUrl, psqlUserName, psqlPassword);
+            System.out.println("Connection to Store DB succesfull!");
+        }catch (SQLException e){
+            System.out.println("not connected(");
+            e.printStackTrace();
         }
-        ClientCommandManager.startMonitoring();
-
+        LabWorkListManager.init(new ArrayList<>());
+        UserWaiter.startUserMonitor();
     }
     public static int getPort(){return port;}
     public static int getServerPort(){return serverPort;}
+    public static int getCurrentPort(){return currentPort;}
+    public static int getCurrentServerPort(){return currentServerPort;}
+    public static void incCurrentPort(){
+        currentPort+=2;
+        currentServerPort+=2;
+    }
     public static void setInetAdress(InetAddress Address){adress=Address;}
     public static InetAddress getAdress(){return adress;}
 }
