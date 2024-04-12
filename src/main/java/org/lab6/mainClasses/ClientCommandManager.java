@@ -22,9 +22,6 @@ public class ClientCommandManager extends Thread{
         UserAuthorizer userAuthorizer=new UserAuthorizer(port, serverPort, adress);
         userID=userAuthorizer.init();
         controller=new Controller(serverPort, adress, this, userID);
-        System.out.println("asdasdasd");
-        System.out.println(port);
-        System.out.println(serverPort);
         while(isAlive){
             SendedCommand sendedCommand = UDP_transmitter.get(port);
             System.out.println(sendedCommand.getCommandName());

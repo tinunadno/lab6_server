@@ -2,11 +2,16 @@ package org.lab6.commands;
 
 import org.lab6.mainClasses.LabWorkListManager;
 
-public class RemoveGreater extends Command implements CommandWithArgument {
+public class RemoveGreater extends Command implements CommandWithArgument, UserIdRequire {
 	private String argument;
+	private int userID;
+	@Override
+	public void setUserId(int userID){
+		this.userID=userID;
+	}
 	@Override
 	public void execute(){
-		LabWorkListManager.RemoveGreater(Float.parseFloat(argument));
+		LabWorkListManager.RemoveGreater(Float.parseFloat(argument), userID);
 	}
 	@Override
 	public String getComment(){

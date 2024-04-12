@@ -10,7 +10,6 @@ public class Clear extends Command implements UserIdRequire{
 	}
 	@Override
 	public void execute(){
-		System.out.println(userID);
 		LabWorkListManager.clear(userID);
 	}
 	@Override

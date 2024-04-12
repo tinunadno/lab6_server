@@ -18,14 +18,14 @@ public class UserAuthorizer {
         if((UDP_transmitter.get(port)).equals("r")){
             String newUserName=((Message)UDP_transmitter.get(port)).getMessage();
             String newUserPassword=((Message)UDP_transmitter.get(port)).getMessage();
-            String query = "INSERT INTO users(userName, password)\nVALUES\n('"+newUserName+"','"+newUserPassword+"')";
+
+            String insert_query = "INSERT INTO users(userName, password)\nVALUES\n('"+newUserName+"','"+newUserPassword+"')";
             try {
                 Statement st=Main.getConnection().createStatement();
-                st.execute(query);
+                st.execute(insert_query);
                 UDP_transmitter.send(serverPort, address, new Message("Successfully added new user"));
             }catch(SQLException e){
-                System.out.println("bad query");
-                e.printStackTrace();
+                ResponseManager.append(e.getMessage());
             }
         }
 
@@ -45,11 +45,9 @@ public class UserAuthorizer {
         }
         while(true) {
             String userName = ((Message) UDP_transmitter.get(port)).getMessage();
-            System.out.println("USNM:"+userName);
             try {
                 ResultSet userNameSet = s.executeQuery();
                 while (userNameSet.next()) {
-                    System.out.println("DBNM:"+userNameSet.getString("username"));
                     if (userNameSet.getString("username").equals( userName)) {
                         Message message=new Message("SUCCESS");
                         UDP_transmitter.send(serverPort, address, message);

@@ -1,6 +1,7 @@
 package org.lab6.mainClasses;
 
 import org.lab6.Main;
+import org.lab6.commands.Update;
 import org.lab6.storedClasses.Difficulty;
 import org.lab6.storedClasses.LabWork;
 import org.lab6.storedClasses.Person;
@@ -48,9 +49,24 @@ public class LabWorkListManager {
 	 * @param id
 	 * @param lw
 	 */
-	public static void set(int id, LabWork lw){
-		list.set(id, lw);
-		ResponseManager.append("successfully updated instance with id: "+id);
+	public static void set(int id, LabWork lw, int userID){
+		for(int i=0;i<list.size();i++){
+			if(list.get(i).getID()==id) {
+				try {
+					DBLabWorkManipulator.update((int) list.get(i).getID(), userID, lw);
+					lw.setID((int) list.get(i).getID());
+					lw.setUserID(list.get(i).getUserID());
+					lw.setCreationDate(list.get(i).getCreationDate());
+					list.set(i, lw);
+					ResponseManager.append("successfully updated instance with id "+id);
+				}catch (SQLException e){
+					e.printStackTrace();
+					ResponseManager.append("SERVER_ERROR:can't update instance with id "+id+", because unpredictable sql error");
+				}catch (IllegalUserAccessException e){
+					ResponseManager.append(e.getMessage());
+				}
+			}
+		}
 	}
 
 	/**
@@ -58,14 +74,19 @@ public class LabWorkListManager {
 	 * @param id
 	 */
 	
-	public static void remove(int id){
+	public static void remove(int id, int userID){
 
 		try{
-			list.remove(id);
+			DBLabWorkManipulator.remove(id, userID);
+
+			list.removeIf(lw->(lw.getID()==id));
 			ResponseManager.append("successfully removed instance with index " + id);
 		}
-		catch(IndexOutOfBoundsException e){
-			ResponseManager.append("this index doesnt exists");
+		catch(SQLException e){
+			ResponseManager.append("SERVER_ERROR:can't delete LabWork instance with id "+id+", because sql unpredictable mistake");
+			e.printStackTrace();
+		}catch (IllegalUserAccessException e){
+			ResponseManager.append(e.getMessage());
 		}
 	}
 
@@ -77,7 +98,6 @@ public class LabWorkListManager {
 
 			DBLabWorkManipulator.clear(userID);
 
-			System.out.println("cleared");
 			Person.clearPassportBase();
 			list.removeIf(lw->(lw.getUserID()==userID));
 			ResponseManager.append("successfully cleared LabWork Base");
@@ -115,9 +135,9 @@ public class LabWorkListManager {
 	 * removes LabWork object with max minimalPoint
 	 * @param val
 	 */
-	public static void RemoveGreater(float val){
+	public static void RemoveGreater(float val, int userID){
 		for(int i=0;i<list.size();i++)
-			if(list.get(i).getMinimalPoint()>val)remove(i);
+			if(list.get(i).getMinimalPoint()>val)remove((int)list.get(i).getID(), userID);
 		ResponseManager.append("remove greater");
 	}
 

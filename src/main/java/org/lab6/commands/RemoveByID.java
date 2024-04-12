@@ -2,12 +2,17 @@ package org.lab6.commands;
 
 import org.lab6.mainClasses.LabWorkListManager;
 
-public class RemoveByID extends Command implements CommandWithArgument {
+public class RemoveByID extends Command implements CommandWithArgument, UserIdRequire {
 	private String argument;
+	private int userID;
 	@Override
 	public void execute(){
 		int index=Integer.parseInt(argument);
-		LabWorkListManager.remove(index);
+		LabWorkListManager.remove(index, userID);
+	}
+	@Override
+	public void setUserId(int userID){
+		this.userID=userID;
 	}
 	@Override
 	public String getComment(){

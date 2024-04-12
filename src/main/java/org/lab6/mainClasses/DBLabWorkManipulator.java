@@ -53,7 +53,6 @@ public class DBLabWorkManipulator {
     }
 
     public static void clear(int userID) throws SQLException{
-        System.out.println("trying to delete");
 
         int personID=0;
         int locationID=0;
@@ -67,13 +66,9 @@ public class DBLabWorkManipulator {
         Statement lw_st = Main.getConnection().createStatement();
         lw_st.execute(lw_delete_query);
 
-        System.out.println(userID);
         while(lw_KeysSet.next()) {
-            System.out.println("getting ids");
             personID = Integer.parseInt(lw_KeysSet.getString("author"));
             coordinatesID = Integer.parseInt(lw_KeysSet.getString("coordinates"));
-            System.out.println("crds "+coordinatesID);
-            System.out.println("prs "+personID);
 
             query = "SELECT location FROM person WHERE(id=" + personID + ")";
             PreparedStatement person_s = Main.getConnection().prepareStatement(query);
@@ -82,8 +77,6 @@ public class DBLabWorkManipulator {
             locationID = Integer.parseInt(person_KeysSet.getString("location"));
 
 
-            System.out.println("loc "+locationID);
-            System.out.println("user "+userID);
             String pers_delete_query = "DELETE FROM person WHERE(id=" + personID + ")";
             String coordinates_delete_query = "DELETE FROM coordinates WHERE(id=" + coordinatesID + ")";
             String location_delete_query = "DELETE FROM location WHERE(id=" + locationID + ")";
@@ -92,5 +85,73 @@ public class DBLabWorkManipulator {
             person_st.execute(coordinates_delete_query);
             person_st.execute(location_delete_query);
         }
+    }
+
+    public static void remove(int lwID, int userID) throws SQLException, IllegalUserAccessException{
+        int user_id=0;
+        int coordinates_id=0;
+        int person_id=0;
+        int location_id=0;
+
+        String lw_query="SELECT user_id, author, coordinates FROM labwork WHERE(id="+lwID+")";
+        PreparedStatement s = Main.getConnection().prepareStatement(lw_query);
+        ResultSet lw_KeysSet = s.executeQuery();
+        lw_KeysSet.next();
+        if(userID!=Integer.parseInt(lw_KeysSet.getString("user_id")))throw new IllegalUserAccessException("you have no access to this LabWork instance with index "+lwID+" it have user with id "+user_id);
+        coordinates_id=Integer.parseInt(lw_KeysSet.getString("coordinates"));
+        person_id=Integer.parseInt(lw_KeysSet.getString("author"));
+
+        String person_query="SELECT location FROM person WHERE(id="+person_id+")";
+        PreparedStatement person_s = Main.getConnection().prepareStatement(person_query);
+        ResultSet personKeysSet = person_s.executeQuery();
+        personKeysSet.next();
+        location_id=Integer.parseInt(personKeysSet.getString("location"));
+
+        String lw_delete_query="DELETE FROM labwork WHERE(id="+lwID+")";
+        String coordinates_delete_query="DELETE FROM coordinates WHERE(id="+coordinates_id+")";
+        String person_delete_query="DELETE FROM person WHERE(id="+person_id+")";
+        String location_delete_query="DELETE FROM location WHERE(id="+location_id+")";
+
+        Statement delete_st = Main.getConnection().createStatement();
+        delete_st.execute(lw_delete_query);
+        delete_st.execute(coordinates_delete_query);
+        delete_st.execute(person_delete_query);
+        delete_st.execute(location_delete_query);
+    }
+
+    public static void update(int lwID, int userID, LabWork labWork) throws SQLException{
+        int user_id=0;
+        int coordinates_id=0;
+        int person_id=0;
+        int location_id=0;
+
+        String lw_query="SELECT user_id, author, coordinates FROM labwork WHERE(id="+lwID+")";
+        PreparedStatement s = Main.getConnection().prepareStatement(lw_query);
+        ResultSet lw_KeysSet = s.executeQuery();
+        lw_KeysSet.next();
+        if(userID!=Integer.parseInt(lw_KeysSet.getString("user_id")))throw new IllegalUserAccessException(
+                "you have no access to this LabWork instance with index "+lwID+" it have user with id "+user_id);
+        coordinates_id=Integer.parseInt(lw_KeysSet.getString("coordinates"));
+        person_id=Integer.parseInt(lw_KeysSet.getString("author"));
+
+        String person_query="SELECT location FROM person WHERE(id="+person_id+")";
+        PreparedStatement person_s = Main.getConnection().prepareStatement(person_query);
+        ResultSet personKeysSet = person_s.executeQuery();
+        personKeysSet.next();
+        location_id=Integer.parseInt(personKeysSet.getString("location"));
+
+        String location_update_query="UPDATE location SET x="+labWork.getAuthor().getLocation().getX()+", y="+labWork.getAuthor().getLocation().getY()+
+                ", name='"+labWork.getAuthor().getLocation().getName()+"' WHERE(id="+location_id+")";
+        String coordinates_update_query="UPDATE coordinates SET x="+labWork.getCoordinates().getX()+", y="
+                +labWork.getCoordinates().getY()+" WHERE(id="+coordinates_id+")";
+        String  person_update_query="UPDATE person SET name='"+labWork.getAuthor().getName()+"', passportID='"+
+                labWork.getAuthor().getPassportId()+"', eyeColor='"+labWork.getAuthor().geteyeColor()+"' WHERE(id="+person_id+")";
+        String labwork_update_query="UPDATE labwork SET name='"+labWork.getName()+"', minimalPoint="+labWork.getMinimalPoint()+", description='"+
+                labWork.getDescription()+"', tunedInWorks="+labWork.getTunedInWorks()+", difficulty='"+labWork.getDifficulty()+"' WHERE(id="+lwID+")";
+        Statement delete_st = Main.getConnection().createStatement();
+        delete_st.execute(location_update_query);
+        delete_st.execute(coordinates_update_query);
+        delete_st.execute(person_update_query);
+        delete_st.execute(labwork_update_query);
     }
 }
