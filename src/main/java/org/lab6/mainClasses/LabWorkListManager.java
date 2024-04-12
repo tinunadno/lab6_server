@@ -1,10 +1,15 @@
 package org.lab6.mainClasses;
 
+import org.lab6.Main;
 import org.lab6.storedClasses.Difficulty;
 import org.lab6.storedClasses.LabWork;
 import org.lab6.storedClasses.Person;
 
 import java.io.FileWriter;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -14,15 +19,9 @@ public class LabWorkListManager {
 
 	/**
 	 * initialize LabWork ArrayList
-	 * @param list1
 	 */
-	public static void init(ArrayList<LabWork> list1){
-		if(list==null){
-			list=list1;
-			creationDate=java.time.LocalDate.now();
-		}
-		else
-			System.out.println("ArrayList already exists");
+	public static void init(){
+		list=DBParser.parseLabWorkFromDB();
 	}
 
 	/**
@@ -30,9 +29,17 @@ public class LabWorkListManager {
 	 * @param lw
 	 */
 	
-	public static void append(LabWork lw){
-		list.add(lw);
-		ResponseManager.append("successfully added new instance");
+	public static void append(LabWork lw, int userID){
+		lw.setUserID(userID);
+
+		try{
+			DBLabWorkManipulator.addLabWork(lw);
+			list.add(lw);
+			ResponseManager.append("successfully added new instance");
+		}catch(SQLException e){
+			ResponseManager.append("SERVER_ERROR:can't add LabWork instance to DataBase");
+			e.printStackTrace();
+		}
 	}
 
 
@@ -65,10 +72,19 @@ public class LabWorkListManager {
 	/**
 	 * clear ArrayList
 	 */
-	public static void clear(){
-		Person.clearPassportBase();
-		list.clear();
-		ResponseManager.append("successfully cleared LabWork Base");
+	public static void clear(int userID){
+		try {
+
+			DBLabWorkManipulator.clear(userID);
+
+			System.out.println("cleared");
+			Person.clearPassportBase();
+			list.removeIf(lw->(lw.getUserID()==userID));
+			ResponseManager.append("successfully cleared LabWork Base");
+		}catch(SQLException e){
+			ResponseManager.append("SERVER_ERROR:can't clear LabWork instances of current user");
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -88,11 +104,11 @@ public class LabWorkListManager {
 	 * add LabWork object if minimal point field is max
 	 * @param lw
 	 */
-	public static void addIfMax(LabWork lw){
+	public static void addIfMax(LabWork lw, int userID){
 		boolean flag=true;
 		for(LabWork labwork: list)
 			flag=!(labwork.getMinimalPoint()>lw.getMinimalPoint());
-		if(flag)append(lw);
+		if(flag)append(lw, userID);
 	}
 
 	/**

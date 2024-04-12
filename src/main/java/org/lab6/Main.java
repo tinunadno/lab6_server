@@ -35,9 +35,10 @@ public class Main {
 
 
 
-        LabWorkListManager.init(new ArrayList<>());
+        LabWorkListManager.init();
         UserWaiter.startUserMonitor();
     }
+    public static Connection getConnection(){return connection;}
     public static int getPort(){return port;}
     public static int getServerPort(){return serverPort;}
     public static int getCurrentPort(){return currentPort;}

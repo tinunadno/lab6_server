@@ -10,18 +10,18 @@ public class ClientCommandManager extends Thread{
     private InetAddress adress;
     private Controller controller;
     private boolean isAlive;
+    private int userID;
     public ClientCommandManager(int port, int serverPort){
         this.port=port;
         this.serverPort=serverPort;
         this.adress=Main.getAdress();
-        controller=new Controller(serverPort, adress, this);
         isAlive=true;
     }
     @Override
     public void run(){
-
-
-
+        UserAuthorizer userAuthorizer=new UserAuthorizer(port, serverPort, adress);
+        userID=userAuthorizer.init();
+        controller=new Controller(serverPort, adress, this, userID);
         System.out.println("asdasdasd");
         System.out.println(port);
         System.out.println(serverPort);

@@ -54,7 +54,10 @@ public class Person implements Serializable {
 	public String getPassportId(){return passportID;}
 	public Color geteyeColor(){return eyeColor;}
 	public Location getLocation(){return location;}
-	
+
+	public String getFieldsAsTuple() {
+		return "('"+name+"','"+passportID+"','"+eyeColor.toString()+"',%1)";
+	}
 	public String toString(){return "[name:"+name+", \n\tpassportID:"+passportID+", \n\teyeColor:"+eyeColor.toString()+", \n\tlocation:"+location.toString()+"]";}
 	public String toJson(){
 		return "\"Person\": {\n\t\"name\": \""+getName()+"\",\n\t\"passportID\": \""+getPassportId()+"\",\n\t\"eyeColor\": \""+geteyeColor()+"\",\n\t"+location.toJson().replace("\t", "\t\t")+"\n}";

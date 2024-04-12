@@ -12,6 +12,7 @@ public class Controller {
 	private int port;
 	private InetAddress address;
 	private ClientCommandManager clientThread;
+	private int userID;
 	/**
 	 * 	Map with command objects and names
 	 */
@@ -35,10 +36,11 @@ public class Controller {
 		comands.put("disconnect", new Disconnect());
 		comands.put("get_list_as_json", new GetListAsJson());
 	}
-	public Controller(int port, InetAddress address, ClientCommandManager clientThread){
+	public Controller(int port, InetAddress address, ClientCommandManager clientThread, int userID){
 		this.port=port;
 		this.address=address;
 		this.clientThread=clientThread;
+		this.userID=userID;
 	}
 
 	/**
@@ -54,6 +56,8 @@ public class Controller {
 			}
 			if(command instanceof InterruptingCommand)
 				((InterruptingCommand)command).setThread(clientThread);
+			if(command instanceof UserIdRequire)
+				((UserIdRequire) command).setUserId(userID);
 			command.execute();
 		}catch(NullPointerException e){
 			ResponseManager.append("\""+key+"\" is not a command, use help for syntax");
@@ -68,7 +72,11 @@ public class Controller {
 	 */
 	public void invoke(String key, String argument){
 		try{
-			((CommandWithArgument)(comands.get(key))).setArgument(argument);
+			Command command=comands.get(key);
+			if(command instanceof UserIdRequire)
+				((UserIdRequire) command).setUserId(userID);
+			if(command instanceof CommandWithArgument)
+				((CommandWithArgument)command).setArgument(argument);
 			comands.get(key).execute();
 		}catch(NullPointerException e){
 			ResponseManager.append("\""+key+"\" is not a command, use help for syntax");
@@ -76,7 +84,11 @@ public class Controller {
 	}
 	public void invoke(String key, LabWork labWork){
 		try{
-			((CommandWithParsedInstance)(comands.get(key))).setParsedInstance(labWork);
+			Command command=comands.get(key);
+			if(command instanceof UserIdRequire)
+				((UserIdRequire) command).setUserId(userID);
+			if(command instanceof CommandWithParsedInstance)
+				((CommandWithParsedInstance)(comands.get(key))).setParsedInstance(labWork);
 			comands.get(key).execute();
 		}catch(NullPointerException e){
 			ResponseManager.append("\""+key+"\" is not a command, use help for syntax");
@@ -85,8 +97,13 @@ public class Controller {
 
 	public void invoke(String key, String argument, LabWork labWork){
 		try{
-			((CommandWithParsedInstance)(comands.get(key))).setParsedInstance(labWork);
-			((CommandWithArgument)(comands.get(key))).setArgument(argument);
+			Command command=comands.get(key);
+			if(command instanceof UserIdRequire)
+				((UserIdRequire) command).setUserId(userID);
+			if(command instanceof CommandWithParsedInstance)
+				((CommandWithParsedInstance)(comands.get(key))).setParsedInstance(labWork);
+			if(command instanceof CommandWithArgument)
+				((CommandWithArgument)command).setArgument(argument);
 			comands.get(key).execute();
 		}catch(NullPointerException e){
 			ResponseManager.append("\""+key+"\" is not a command, use help for syntax");

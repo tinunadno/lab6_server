@@ -19,7 +19,10 @@ public class Location implements Serializable {
 	public float getX(){return x;}
 	public float getY(){return y;}
 	public String getName(){return name;}
-	
+
+	public String getFieldsAsTuple() {
+		return "("+x+","+y+",'"+name+"')";
+	}
 	public String toString(){return "[x:"+x.toString()+", y:"+y+", name:"+name+"]";}
 	public String toJson(){
 		return "\"Location\": {\n\"x\": "+getX()+",\n\"y\": "+getY()+",\n\"name\": \""+getName()+"\"\n}";

@@ -18,7 +18,10 @@ public class Coordinates implements Serializable {
 	
 	public Float getX(){return x;}
 	public Integer getY(){return y;}
-	
+
+	public String getFieldsAsTuple(){
+		return "("+x+","+y+")";
+	}
 	public String toString(){return "[x:"+x.toString()+", y:"+y.toString()+"]";}
 	public String toJson(){
 		return "\"Coordinates\": {\n\"x\": "+getX()+",\n\"y\": "+getY()+"\n}";
