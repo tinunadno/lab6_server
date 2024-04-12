@@ -19,6 +19,9 @@ public class ClientCommandManager extends Thread{
     }
     @Override
     public void run(){
+
+
+
         System.out.println("asdasdasd");
         System.out.println(port);
         System.out.println(serverPort);

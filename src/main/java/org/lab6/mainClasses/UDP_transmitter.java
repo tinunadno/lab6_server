@@ -52,6 +52,7 @@ public class UDP_transmitter {
             ds = new DatagramSocket(port);
         }catch(SocketException e){
             System.out.println("can't create DatagramSocket");
+            e.printStackTrace();
         }
         //ds.setSoTimeout(1000);
         //getting object info

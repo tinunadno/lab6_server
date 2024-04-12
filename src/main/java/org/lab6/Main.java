@@ -3,39 +3,38 @@ package org.lab6;
 import org.lab6.mainClasses.*;
 
 import java.net.InetAddress;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.Driver;
+
 public class Main {
-    private static int port=6453;
+    private static int port=17937;
     private static int currentPort=17749;
     private static int currentServerPort=17750;
-    private static int serverPort=6464;
+    private static int serverPort=17938;
     private static InetAddress adress=null;
-    private static final String psqlUserName="s409324";
-    private static final String psqlPassword="IIcX*5966";
-    private static final String psqlUrl="mysql://g/studs";
-
-
+    private static Connection connection;
     public static void main(String[] args) {
-        try{
-            Class.forName("java.sql.Driver").getDeclaredConstructor().newInstance();
-        }catch(ClassNotFoundException e){
-            e.printStackTrace();
-        }catch(NoSuchMethodException e){
-            e.printStackTrace();
-        }catch(Exception e){}
+        String connectionUrl = "jdbc:postgresql://pg:5432/studs";
+        String user="s409324";
+        String password="IIcX*5966";
+
         try {
-            Connection conn = DriverManager.getConnection(psqlUrl, psqlUserName, psqlPassword);
-            System.out.println("Connection to Store DB succesfull!");
-        }catch (SQLException e){
-            System.out.println("not connected(");
+            Class.forName("org.postgresql.Driver").getDeclaredConstructor().newInstance();
+            connection=DriverManager.getConnection(connectionUrl, user, password);
+            if(connection!=null)System.out.println("Successfully connected to DataBase!");
+            else System.out.println("failed to connect to DataBase, connection is null");
+        }catch (ClassNotFoundException e) {
+            System.out.println("ERROR:No JDBC driver found");
+        }catch(SQLException e) {
+            System.out.println("ERROR:can't connect to database");
+        }catch(Exception e){
             e.printStackTrace();
         }
+
+
+
         LabWorkListManager.init(new ArrayList<>());
         UserWaiter.startUserMonitor();
     }
