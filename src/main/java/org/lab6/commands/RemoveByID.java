@@ -5,6 +5,10 @@ import org.lab6.mainClasses.LabWorkListManager;
 public class RemoveByID extends Command implements CommandWithArgument, UserIdRequire {
 	private String argument;
 	private int userID;
+	public RemoveByID(){
+		this.setRequiresArgument(true);
+		this.setRequiresUserID(true);
+	}
 	@Override
 	public void execute(){
 		int index=Integer.parseInt(argument);

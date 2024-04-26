@@ -5,6 +5,10 @@ import org.lab6.mainClasses.LabWorkListManager;
 public class RemoveGreater extends Command implements CommandWithArgument, UserIdRequire {
 	private String argument;
 	private int userID;
+	public RemoveGreater(){
+		this.setRequiresArgument(true);
+		this.setRequiresUserID(true);
+	}
 	@Override
 	public void setUserId(int userID){
 		this.userID=userID;

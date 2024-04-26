@@ -4,6 +4,9 @@ import org.lab6.mainClasses.LabWorkListManager;
 
 public class FilterByDescription extends Command implements CommandWithArgument{
 	private String argument;
+	public FilterByDescription(){
+		this.setRequiresArgument(true);
+	}
 	@Override
 	public void execute(){
 		LabWorkListManager.FilterByDescription(argument);

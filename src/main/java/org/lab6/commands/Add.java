@@ -4,9 +4,14 @@ import org.lab6.mainClasses.LabWorkListManager;
 import org.lab6.storedClasses.LabWork;
 
 public class Add extends Command implements CommandWithParsedInstance, UserIdRequire{
+
 	private LabWork parsedInstance;
 	private int userID;
 
+	public Add(){
+		this.setRequiresUserID(true);
+		this.setRequiresLabWorkInstance(true);
+	}
 	@Override
 	public void setUserId(int userID){
 		this.userID=userID;

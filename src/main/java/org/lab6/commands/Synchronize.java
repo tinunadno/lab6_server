@@ -8,6 +8,9 @@ import java.net.InetAddress;
 public class Synchronize extends Command implements ResponseCommand{
     private int port;
     private InetAddress address;
+    public Synchronize(){
+        this.setGivesResponse(true);
+    }
     public void execute(){
         System.out.println(port);
         System.out.println(port);

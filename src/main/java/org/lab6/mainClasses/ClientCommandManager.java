@@ -24,7 +24,6 @@ public class ClientCommandManager extends Thread{
         controller=new Controller(serverPort, adress, this, userID);
         while(isAlive){
             SendedCommand sendedCommand = UDP_transmitter.get(port);
-            System.out.println(sendedCommand.getCommandName());
             try {
                 if (sendedCommand.isArgumentExists() && sendedCommand.isNeedParsedInstance()) controller.invoke(
                         sendedCommand.getCommandName(), sendedCommand.getArgument(), sendedCommand.getParsedInstance());
@@ -34,7 +33,6 @@ public class ClientCommandManager extends Thread{
                         sendedCommand.getParsedInstance());
                 else controller.invoke(sendedCommand.getCommandName());
             }catch(NullPointerException e){
-                System.out.println("can't process command");
                 ResponseManager.append("can't deserialize object on server");
             }
             ResponseManager.sendMessage(serverPort, adress);

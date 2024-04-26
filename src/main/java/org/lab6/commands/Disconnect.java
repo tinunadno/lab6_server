@@ -11,6 +11,11 @@ public class Disconnect extends Command implements ResponseCommand, Interrupting
     private int port;
     private InetAddress address;
     private ClientCommandManager clientThread;
+    public Disconnect(){
+        this.setGivesResponse(true);
+        this.setInterruptsThread(true);
+    }
+
     @Override
     public void execute(){
         LabWorkListManager.save("./src/main/java/org/lab6/test.json");

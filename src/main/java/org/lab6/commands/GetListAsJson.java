@@ -11,6 +11,9 @@ import java.net.InetAddress;
 public class GetListAsJson extends Command implements ResponseCommand{
     private int port;
     private InetAddress address;
+    public GetListAsJson(){
+        this.setGivesResponse(true);
+    }
     @Override
     public void execute(){
         Message json=new Message(LabWorkListManager.toJson());

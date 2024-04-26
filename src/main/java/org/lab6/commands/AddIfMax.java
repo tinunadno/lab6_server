@@ -6,6 +6,10 @@ import org.lab6.storedClasses.LabWork;
 public class AddIfMax extends Command implements CommandWithParsedInstance, UserIdRequire{
 	private LabWork parsedInstance;
 	private int userID;
+	public AddIfMax(){
+		this.setRequiresLabWorkInstance(true);
+		this.setRequiresUserID(true);
+	}
 	@Override
 	public void setUserId(int userID){
 		this.userID=userID;

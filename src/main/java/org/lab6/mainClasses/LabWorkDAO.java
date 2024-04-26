@@ -3,14 +3,13 @@ package org.lab6.mainClasses;
 import org.lab6.Main;
 import org.lab6.storedClasses.LabWork;
 
-import java.beans.PropertyEditorSupport;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class DBLabWorkManipulator {
-    public static void addLabWork(LabWork lw) throws SQLException{
+public class LabWorkDAO {
+    public static synchronized void addLabWork(LabWork lw) throws SQLException{
         int locationId=0;
         int personId=0;
         int coordinatesId=0;
@@ -52,42 +51,24 @@ public class DBLabWorkManipulator {
         lw.setCreationDate(creationDateSet.getString(1));
     }
 
-    public static void clear(int userID) throws SQLException{
+    public static synchronized void clear(int userID) throws SQLException{
 
         int personID=0;
         int locationID=0;
         int coordinatesID=0;
 
-        String query="SELECT coordinates,author FROM labwork WHERE(user_id="+userID+")";
+        String query="SELECT id FROM labwork WHERE(user_id="+userID+")";
         PreparedStatement s = Main.getConnection().prepareStatement(query);
-        ResultSet lw_KeysSet = s.executeQuery();
-
-        String lw_delete_query = "DELETE FROM labwork WHERE(user_id=" + userID + ")";
-        Statement lw_st = Main.getConnection().createStatement();
-        lw_st.execute(lw_delete_query);
-
-        while(lw_KeysSet.next()) {
-            personID = Integer.parseInt(lw_KeysSet.getString("author"));
-            coordinatesID = Integer.parseInt(lw_KeysSet.getString("coordinates"));
-
-            query = "SELECT location FROM person WHERE(id=" + personID + ")";
-            PreparedStatement person_s = Main.getConnection().prepareStatement(query);
-            ResultSet person_KeysSet = person_s.executeQuery();
-            person_KeysSet.next();
-            locationID = Integer.parseInt(person_KeysSet.getString("location"));
-
-
-            String pers_delete_query = "DELETE FROM person WHERE(id=" + personID + ")";
-            String coordinates_delete_query = "DELETE FROM coordinates WHERE(id=" + coordinatesID + ")";
-            String location_delete_query = "DELETE FROM location WHERE(id=" + locationID + ")";
-            Statement person_st = Main.getConnection().createStatement();
-            person_st.execute(pers_delete_query);
-            person_st.execute(coordinates_delete_query);
-            person_st.execute(location_delete_query);
+        ResultSet lw_IDSet = s.executeQuery();
+        while(lw_IDSet.next()){
+            try{
+                remove(lw_IDSet.getInt(1), userID);
+            }catch (IllegalUserAccessException e){}
         }
+
     }
 
-    public static void remove(int lwID, int userID) throws SQLException, IllegalUserAccessException{
+    public static synchronized void remove(int lwID, int userID) throws SQLException, IllegalUserAccessException{
         int user_id=0;
         int coordinates_id=0;
         int person_id=0;
@@ -119,7 +100,7 @@ public class DBLabWorkManipulator {
         delete_st.execute(location_delete_query);
     }
 
-    public static void update(int lwID, int userID, LabWork labWork) throws SQLException{
+    public static synchronized void update(int lwID, int userID, LabWork labWork) throws SQLException{
         int user_id=0;
         int coordinates_id=0;
         int person_id=0;

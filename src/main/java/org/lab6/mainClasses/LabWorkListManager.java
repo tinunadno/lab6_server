@@ -1,16 +1,11 @@
 package org.lab6.mainClasses;
 
-import org.lab6.Main;
-import org.lab6.commands.Update;
 import org.lab6.storedClasses.Difficulty;
 import org.lab6.storedClasses.LabWork;
 import org.lab6.storedClasses.Person;
 
 import java.io.FileWriter;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -34,7 +29,7 @@ public class LabWorkListManager {
 		lw.setUserID(userID);
 
 		try{
-			DBLabWorkManipulator.addLabWork(lw);
+			LabWorkDAO.addLabWork(lw);
 			list.add(lw);
 			ResponseManager.append("successfully added new instance");
 		}catch(SQLException e){
@@ -53,7 +48,7 @@ public class LabWorkListManager {
 		for(int i=0;i<list.size();i++){
 			if(list.get(i).getID()==id) {
 				try {
-					DBLabWorkManipulator.update((int) list.get(i).getID(), userID, lw);
+					LabWorkDAO.update((int) list.get(i).getID(), userID, lw);
 					lw.setID((int) list.get(i).getID());
 					lw.setUserID(list.get(i).getUserID());
 					lw.setCreationDate(list.get(i).getCreationDate());
@@ -77,7 +72,7 @@ public class LabWorkListManager {
 	public static void remove(int id, int userID){
 
 		try{
-			DBLabWorkManipulator.remove(id, userID);
+			LabWorkDAO.remove(id, userID);
 
 			list.removeIf(lw->(lw.getID()==id));
 			ResponseManager.append("successfully removed instance with index " + id);
@@ -96,10 +91,11 @@ public class LabWorkListManager {
 	public static void clear(int userID){
 		try {
 
-			DBLabWorkManipulator.clear(userID);
+			LabWorkDAO.clear(userID);
 
 			Person.clearPassportBase();
-			list.removeIf(lw->(lw.getUserID()==userID));
+
+								list.removeIf(lw->(lw.getUserID()==userID));
 			ResponseManager.append("successfully cleared LabWork Base");
 		}catch(SQLException e){
 			ResponseManager.append("SERVER_ERROR:can't clear LabWork instances of current user");
