@@ -3,6 +3,7 @@ package org.lab6.mainClasses;
 import org.lab6.Main;
 import org.lab6.storedClasses.LabWork;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +18,7 @@ public class LabWorkDAO {
         String location_query="INSERT INTO location(x, y, name) VALUES "+lw.getAuthor().getLocation().getFieldsAsTuple();
         String person_query="INSERT INTO person(name, passportID, eyeColor, location) VALUES "+lw.getAuthor().getFieldsAsTuple();
         String coordinates_query="INSERT INTO coordinates(x, y) VALUES"+lw.getCoordinates().getFieldsAsTuple();
-        String labWork_query="INSERT INTO labWork(user_id, name, coordinates, minimalPoint, description, tunedInWorks, difficulty, author) VALUES"+lw.getFieldsAsTuple();
+        String labWork_query="INSERT INTO labWork(user_id,username,price, name, coordinates, minimalPoint, description, tunedInWorks, difficulty, author) VALUES"+lw.getFieldsAsTuple();
 
         Statement location_st= Main.getConnection().createStatement();
         location_st.execute(location_query, Statement.RETURN_GENERATED_KEYS);
@@ -127,12 +128,29 @@ public class LabWorkDAO {
                 +labWork.getCoordinates().getY()+" WHERE(id="+coordinates_id+")";
         String  person_update_query="UPDATE person SET name='"+labWork.getAuthor().getName()+"', passportID='"+
                 labWork.getAuthor().getPassportId()+"', eyeColor='"+labWork.getAuthor().geteyeColor()+"' WHERE(id="+person_id+")";
-        String labwork_update_query="UPDATE labwork SET name='"+labWork.getName()+"', minimalPoint="+labWork.getMinimalPoint()+", description='"+
+        String labwork_update_query="UPDATE labwork SET price="+labWork.getPrice()+", name='"+labWork.getName()+"', minimalPoint="+labWork.getMinimalPoint()+", description='"+
                 labWork.getDescription()+"', tunedInWorks="+labWork.getTunedInWorks()+", difficulty='"+labWork.getDifficulty()+"' WHERE(id="+lwID+")";
         Statement delete_st = Main.getConnection().createStatement();
         delete_st.execute(location_update_query);
         delete_st.execute(coordinates_update_query);
         delete_st.execute(person_update_query);
         delete_st.execute(labwork_update_query);
+    }
+    public static synchronized double getMoneyCount(int userID) throws SQLException{
+        String wallet_query="SELECT wallet FROM users WHERE(id=0"+userID+")";
+        PreparedStatement s = Main.getConnection().prepareStatement(wallet_query);
+        ResultSet wallet_KeysSet = s.executeQuery();
+        wallet_KeysSet.next();
+        double currentWallet=Double.parseDouble(wallet_KeysSet.getString("wallet"));
+        return currentWallet;
+    }
+    public static synchronized void insertMoney(int userID, double moneyAmount) throws SQLException{
+        double currentWallet=getMoneyCount(userID);
+        currentWallet+=moneyAmount;
+
+
+        String update_query="UPDATE users SET wallet="+currentWallet+" WHERE(id="+userID+")";
+        Statement update_st = Main.getConnection().createStatement();
+        update_st.execute(update_query);
     }
 }

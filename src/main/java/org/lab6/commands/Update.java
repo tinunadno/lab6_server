@@ -7,6 +7,7 @@ import org.lab6.storedClasses.LabWork;
 public class Update extends Command implements CommandWithArgument, CommandWithParsedInstance, UserIdRequire {
 	private LabWork parsedInstance;
 	private int userID;
+	private String userName;
 	public Update(){
 		this.setRequiresArgument(true);
 		this.setRequiresLabWorkInstance(true);
@@ -15,8 +16,9 @@ public class Update extends Command implements CommandWithArgument, CommandWithP
 	@Override
 	public void setParsedInstance(LabWork parsedInstance){this.parsedInstance=parsedInstance;}
 	@Override
-	public void setUserId(int userID){
+	public void setUserId(int userID, String userName){
 		this.userID=userID;
+		this.userName=userName;
 	}
 	private String argument;
 	@Override

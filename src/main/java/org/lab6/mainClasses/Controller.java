@@ -13,6 +13,7 @@ public class Controller {
     private InetAddress address;
     private ClientCommandManager clientThread;
     private int userID;
+    private String userName;
     /**
      * Map with command objects and names
      */
@@ -36,13 +37,16 @@ public class Controller {
         comands.put("synchronize", new Synchronize());
         comands.put("disconnect", new Disconnect());
         comands.put("get_list_as_json", new GetListAsJson());
+        comands.put("insert_money", new InsertMoney());
+        comands.put("get_user_info", new GetUserInfo());
     }
 
-    public Controller(int port, InetAddress address, ClientCommandManager clientThread, int userID) {
+    public Controller(int port, InetAddress address, ClientCommandManager clientThread, int userID, String userName) {
         this.port = port;
         this.address = address;
         this.clientThread = clientThread;
         this.userID = userID;
+        this.userName=userName;
     }
 
     /**
@@ -60,7 +64,7 @@ public class Controller {
             if (command.isInterruptsThread())
                 ((InterruptingCommand) command).setThread(clientThread);
             if (command.isRequiresUserID())
-                ((UserIdRequire) command).setUserId(userID);
+                ((UserIdRequire) command).setUserId(userID, userName);
             command.execute();
         } catch (NullPointerException e) {
             ResponseManager.append("\"" + key + "\" is not a command, use help for syntax");
@@ -78,7 +82,7 @@ public class Controller {
         try {
             Command command = comands.get(key);
             if (command.isRequiresUserID())
-                ((UserIdRequire) command).setUserId(userID);
+                ((UserIdRequire) command).setUserId(userID, userName);
             if (command.isRequiresArgument())
                 ((CommandWithArgument) command).setArgument(argument);
             comands.get(key).execute();
@@ -91,7 +95,7 @@ public class Controller {
         try {
             Command command = comands.get(key);
             if (command.isRequiresUserID())
-                ((UserIdRequire) command).setUserId(userID);
+                ((UserIdRequire) command).setUserId(userID, userName);
             if (command.isRequiresLabWorkInstance())
                 ((CommandWithParsedInstance) (comands.get(key))).setParsedInstance(labWork);
             comands.get(key).execute();
@@ -104,7 +108,7 @@ public class Controller {
         try {
             Command command = comands.get(key);
             if (command.isRequiresUserID())
-                ((UserIdRequire) command).setUserId(userID);
+                ((UserIdRequire) command).setUserId(userID, userName);
             if (command.isRequiresLabWorkInstance())
                 ((CommandWithParsedInstance) (comands.get(key))).setParsedInstance(labWork);
             if (command.isRequiresArgument())

@@ -21,6 +21,8 @@ public class DBParser {
 
                 int lw_id=Integer.parseInt(LabWorkSet.getString("id"));
                 int lw_userID=Integer.parseInt(LabWorkSet.getString("user_id"));
+                String lw_userName=LabWorkSet.getString("username");
+                double lw_price=Double.parseDouble(LabWorkSet.getString("price"));
                 String lw_name=LabWorkSet.getString("name");
                 String lw_creationDate=LabWorkSet.getString("creationDate");
                 double lw_minimalPoint=Double.parseDouble(LabWorkSet.getString("minimalPoint"));
@@ -60,7 +62,7 @@ public class DBParser {
                 Person person=new Person(person_name, person_passportID, color ,location);
 
 
-                LabWork labWork=new LabWork(lw_id, lw_userID, lw_name, coordinates, lw_creationDate, lw_minimalPoint, lw_description, lw_tunedInWorks, lw_difficulty, person);
+                LabWork labWork=new LabWork(lw_id, lw_userID,lw_userName,lw_price, lw_name, coordinates, lw_creationDate, lw_minimalPoint, lw_description, lw_tunedInWorks, lw_difficulty, person);
                 System.out.println(labWork.getID());
                 labWorkArrayList.add(labWork);
 

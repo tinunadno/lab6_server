@@ -14,44 +14,48 @@ public class UserAuthorizer {
         this.serverPort=serverPort;
         this.address=address;
     }
-    public int init(){
+    public ResultSet init(){
         if((UDP_transmitter.get(port)).equals("r")){
             String newUserName=((Message)UDP_transmitter.get(port)).getMessage();
             String newUserPassword=((Message)UDP_transmitter.get(port)).getMessage();
 
-            String insert_query = "INSERT INTO users(userName, password)\nVALUES\n('"+newUserName+"','"+newUserPassword+"')";
+            String insert_query = "INSERT INTO users(userName, password, wallet)\nVALUES\n('"+newUserName+"','"+newUserPassword+"', 0)";
             try {
                 Statement st=Main.getConnection().createStatement();
                 st.execute(insert_query);
+
                 UDP_transmitter.send(serverPort, address, new Message("Successfully added new user"));
             }catch(SQLException e){
                 ResponseManager.append(e.getMessage());
+                e.printStackTrace();
             }
         }
 
-        int userId = tryToGetUserName();
-        System.out.println(userId);
-        tryToGetPassword(userId);
-        return userId;
+        ResultSet userInfo = tryToGetUserInfo();
+        try {
+            tryToGetPassword(userInfo.getString("id"));
+        }catch (SQLException e){}
+        return userInfo;
 
     }
-    private int tryToGetUserName(){
+    private ResultSet tryToGetUserInfo(){
         String query = "SELECT id, username FROM Users";
         PreparedStatement s=null;
         try {
             s = Main.getConnection().prepareStatement(query);
         }catch(SQLException e){
-            System.out.println("bad querry");
+            System.out.println("bad query");
         }
         while(true) {
             String userName = ((Message) UDP_transmitter.get(port)).getMessage();
             try {
                 ResultSet userNameSet = s.executeQuery();
                 while (userNameSet.next()) {
-                    if (userNameSet.getString("username").equals( userName)) {
+                    String user_name=userNameSet.getString("username");
+                    if (user_name.equals( userName)) {
                         Message message=new Message("SUCCESS");
                         UDP_transmitter.send(serverPort, address, message);
-                        return Integer.parseInt(userNameSet.getString("id"));
+                        return userNameSet;
                     }
                 }
                 Message message=new Message("can't find user with this name");
@@ -61,7 +65,7 @@ public class UserAuthorizer {
             }
         }
     }
-    private void tryToGetPassword(int userID){
+    private void tryToGetPassword(String userID){
         String query = "SELECT password FROM Users WHERE(id="+userID+")";
         try {
             PreparedStatement s = Main.getConnection().prepareStatement(query);

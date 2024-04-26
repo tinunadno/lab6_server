@@ -25,9 +25,9 @@ public class LabWorkListManager {
 	 * @param lw
 	 */
 	
-	public static void append(LabWork lw, int userID){
+	public static void append(LabWork lw, int userID, String userName){
 		lw.setUserID(userID);
-
+		lw.setUserName(userName);
 		try{
 			LabWorkDAO.addLabWork(lw);
 			list.add(lw);
@@ -120,11 +120,11 @@ public class LabWorkListManager {
 	 * add LabWork object if minimal point field is max
 	 * @param lw
 	 */
-	public static void addIfMax(LabWork lw, int userID){
+	public static void addIfMax(LabWork lw, int userID, String userName){
 		boolean flag=true;
 		for(LabWork labwork: list)
 			flag=!(labwork.getMinimalPoint()>lw.getMinimalPoint());
-		if(flag)append(lw, userID);
+		if(flag)append(lw, userID, userName);
 	}
 
 	/**
