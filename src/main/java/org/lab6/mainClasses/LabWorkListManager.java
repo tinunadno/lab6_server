@@ -25,15 +25,15 @@ public class LabWorkListManager {
 	 * @param lw
 	 */
 	
-	public static void append(LabWork lw, int userID, String userName){
+	public static void append(LabWork lw, int userID, String userName, ResponseManager responseManager){
 		lw.setUserID(userID);
 		lw.setUserName(userName);
 		try{
 			LabWorkDAO.addLabWork(lw);
 			list.add(lw);
-			ResponseManager.append("successfully added new instance");
+			responseManager.append("successfully added new instance");
 		}catch(SQLException e){
-			ResponseManager.append("SERVER_ERROR:can't add LabWork instance to DataBase");
+			responseManager.append("SERVER_ERROR:can't add LabWork instance to DataBase");
 			e.printStackTrace();
 		}
 	}
@@ -44,7 +44,7 @@ public class LabWorkListManager {
 	 * @param id
 	 * @param lw
 	 */
-	public static void set(int id, LabWork lw, int userID){
+	public static void set(int id, LabWork lw, int userID, ResponseManager responseManager){
 		for(int i=0;i<list.size();i++){
 			if(list.get(i).getID()==id) {
 				try {
@@ -53,12 +53,12 @@ public class LabWorkListManager {
 					lw.setUserID(list.get(i).getUserID());
 					lw.setCreationDate(list.get(i).getCreationDate());
 					list.set(i, lw);
-					ResponseManager.append("successfully updated instance with id "+id);
+					responseManager.append("successfully updated instance with id "+id);
 				}catch (SQLException e){
 					e.printStackTrace();
-					ResponseManager.append("SERVER_ERROR:can't update instance with id "+id+", because unpredictable sql error");
+					responseManager.append("SERVER_ERROR:can't update instance with id "+id+", because unpredictable sql error");
 				}catch (IllegalUserAccessException e){
-					ResponseManager.append(e.getMessage());
+					responseManager.append(e.getMessage());
 				}
 			}
 		}
@@ -69,26 +69,26 @@ public class LabWorkListManager {
 	 * @param id
 	 */
 	
-	public static void remove(int id, int userID){
+	public static void remove(int id, int userID, ResponseManager responseManager){
 
 		try{
 			LabWorkDAO.remove(id, userID);
 
 			list.removeIf(lw->(lw.getID()==id));
-			ResponseManager.append("successfully removed instance with index " + id);
+			responseManager.append("successfully removed instance with index " + id);
 		}
 		catch(SQLException e){
-			ResponseManager.append("SERVER_ERROR:can't delete LabWork instance with id "+id+", because sql unpredictable mistake");
+			responseManager.append("SERVER_ERROR:can't delete LabWork instance with id "+id+", because sql unpredictable mistake");
 			e.printStackTrace();
 		}catch (IllegalUserAccessException e){
-			ResponseManager.append(e.getMessage());
+			responseManager.append(e.getMessage());
 		}
 	}
 
 	/**
 	 * clear ArrayList
 	 */
-	public static void clear(int userID){
+	public static void clear(int userID, ResponseManager responseManager){
 		try {
 
 			LabWorkDAO.clear(userID);
@@ -96,9 +96,9 @@ public class LabWorkListManager {
 			Person.clearPassportBase();
 
 								list.removeIf(lw->(lw.getUserID()==userID));
-			ResponseManager.append("successfully cleared LabWork Base");
+			responseManager.append("successfully cleared LabWork Base");
 		}catch(SQLException e){
-			ResponseManager.append("SERVER_ERROR:can't clear LabWork instances of current user");
+			responseManager.append("SERVER_ERROR:can't clear LabWork instances of current user");
 			e.printStackTrace();
 		}
 	}
@@ -107,12 +107,12 @@ public class LabWorkListManager {
 	 * save ArrayList as json file
 	 * @param way
 	 */
-	public static void save(String way){
+	public static void save(String way, ResponseManager responseManager){
 		try (var fw = new FileWriter(way)) {
 			fw.write(toJson());
-			ResponseManager.append("successfully saved current LabWork List on server");
+			responseManager.append("successfully saved current LabWork List on server");
 		} catch (Exception e) {
-			ResponseManager.append("bad file name");
+			responseManager.append("bad file name");
 		}
 	}
 
@@ -120,57 +120,57 @@ public class LabWorkListManager {
 	 * add LabWork object if minimal point field is max
 	 * @param lw
 	 */
-	public static void addIfMax(LabWork lw, int userID, String userName){
+	public static void addIfMax(LabWork lw, int userID, String userName, ResponseManager responseManager){
 		boolean flag=true;
 		for(LabWork labwork: list)
 			flag=!(labwork.getMinimalPoint()>lw.getMinimalPoint());
-		if(flag)append(lw, userID, userName);
+		if(flag)append(lw, userID, userName, responseManager);
 	}
 
 	/**
 	 * removes LabWork object with max minimalPoint
 	 * @param val
 	 */
-	public static void RemoveGreater(float val, int userID){
+	public static void RemoveGreater(float val, int userID, ResponseManager responseManager){
 		for(int i=0;i<list.size();i++)
-			if(list.get(i).getMinimalPoint()>val)remove((int)list.get(i).getID(), userID);
-		ResponseManager.append("remove greater");
+			if(list.get(i).getMinimalPoint()>val)remove((int)list.get(i).getID(), userID, responseManager);
+		responseManager.append("remove greater");
 	}
 
 	/**
 	 * shows LabWork objects with desired description
 	 * @param description
 	 */
-	public static void FilterByDescription(String description){
+	public static void FilterByDescription(String description, ResponseManager responseManager){
 		String ret="";
 		for(int i=0;i<list.size();i++)
 			if(list.get(i).getDescription().equals(description))ret+=(list.get(i).toString()+"\n")+"\n";
-		ResponseManager.append(ret);
+		responseManager.append(ret);
 	}
 
 	/**
 	 * print all LabWork objects sorted by difficulty
 	 */
-	public static void printFieldAscendingDifficulty(){
+	public static void printFieldAscendingDifficulty(ResponseManager responseManager){
 		String ret="";
 		for(Difficulty diff:Difficulty.values())
 			for(int i=0;i<list.size();i++)
 				if(list.get(i).getDifficulty()==diff)ret+=(list.get(i).toString()+"\n")+"\n";
-		ResponseManager.append(ret);
+		responseManager.append(ret);
 	}
 
 	/**
 	 * print LabWork object with minimal name
 	 */
-	public static void printMinByName(){
+	public static void printMinByName(ResponseManager responseManager){
 		if(list.size()!=0 && list!=null){
 			LabWork lw=list.get(0);
 			for(int i=1;i<list.size();i++)
 				if(lw.getName().length()>list.get(i).getName().length())lw=list.get(i);
-			ResponseManager.append(lw.toString());
+			responseManager.append(lw.toString());
 		}
 		else {
-			ResponseManager.append("list is empty");
+			responseManager.append("list is empty");
 		}
 	}
 

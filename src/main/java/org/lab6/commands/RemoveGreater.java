@@ -17,7 +17,7 @@ public class RemoveGreater extends Command implements CommandWithArgument, UserI
 	}
 	@Override
 	public void execute(){
-		LabWorkListManager.RemoveGreater(Float.parseFloat(argument), userID);
+		LabWorkListManager.RemoveGreater(Float.parseFloat(argument), userID, responseManager);
 	}
 	@Override
 	public String getComment(){

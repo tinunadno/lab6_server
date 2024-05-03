@@ -15,7 +15,7 @@ public class Clear extends Command implements UserIdRequire{
 	}
 	@Override
 	public void execute(){
-		LabWorkListManager.clear(userID);
+		LabWorkListManager.clear(userID, responseManager);
 	}
 	@Override
 	public String getComment(){

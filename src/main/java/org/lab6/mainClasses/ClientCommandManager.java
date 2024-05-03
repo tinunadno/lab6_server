@@ -16,10 +16,12 @@ public class ClientCommandManager extends Thread{
     private int userID;
     private String userName;
     private UUID userToken;
+    private ResponseManager responseManager;
     public ClientCommandManager(int port, int serverPort){
         this.port=port;
         this.serverPort=serverPort;
         this.adress=Main.getAdress();
+        this.responseManager=new ResponseManager(serverPort, adress);
         isAlive=true;
     }
     @Override
@@ -36,7 +38,7 @@ public class ClientCommandManager extends Thread{
         try{Thread.sleep(150);}catch (InterruptedException e){}
         Message tokenMessage=new Message("token:", userToken);
         UDP_transmitter.send(port, adress, tokenMessage);
-        controller=new Controller(serverPort, adress, this, userID, userName);
+        controller=new Controller(serverPort, adress, this, userID, userName, responseManager);
         while(isAlive){
             SendedCommand sendedCommand = UDP_transmitter.get(port);
             if(userToken.equals(sendedCommand.getToken())) {
@@ -49,12 +51,12 @@ public class ClientCommandManager extends Thread{
                             sendedCommand.getParsedInstance());
                     else controller.invoke(sendedCommand.getCommandName());
                 } catch (NullPointerException e) {
-                    ResponseManager.append("can't deserialize object on server");
+                    responseManager.append("can't deserialize object on server");
                 }
             }else{
-                ResponseManager.append("bad token, try to send message again");
+                responseManager.append("bad token, try to send message again");
             }
-            ResponseManager.sendMessage(serverPort, adress);
+            responseManager.sendMessage();
         }
     }
     public void kill(){

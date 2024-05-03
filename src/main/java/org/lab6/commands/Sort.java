@@ -6,6 +6,7 @@ public class Sort extends Command {
 	@Override
 	public void execute(){
 		LabWorkListManager.sort();
+		responseManager.append("sorted LabWork List");
 	}
 	@Override
 	public String getComment(){

@@ -5,7 +5,7 @@ import org.lab6.mainClasses.LabWorkListManager;
 public class MinByName extends Command{
 	@Override
 	public void execute(){
-		LabWorkListManager.printMinByName();
+		LabWorkListManager.printMinByName(responseManager);
 	}
 	@Override
 	public String getComment(){

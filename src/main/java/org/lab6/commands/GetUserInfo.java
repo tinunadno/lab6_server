@@ -20,9 +20,9 @@ public class GetUserInfo  extends Command implements UserIdRequire{
     @Override
     public void execute(){
         try {
-            ResponseManager.append("[user name: " + userName + ",\n user wallet: " + LabWorkDAO.getMoneyCount(userID) + "]");
+            responseManager.append("[user name: " + userName + ",\n user wallet: " + LabWorkDAO.getMoneyCount(userID) + "]");
         }catch (SQLException e){
-            ResponseManager.append("can't get information about this user");
+            responseManager.append("can't get information about this user");
         }
     }
     @Override

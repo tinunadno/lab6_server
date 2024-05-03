@@ -18,7 +18,6 @@ public class Disconnect extends Command implements ResponseCommand, Interrupting
 
     @Override
     public void execute(){
-        LabWorkListManager.save("./src/main/java/org/lab6/test.json");
         UDP_transmitter.send(port,address,new Message("disconnecting"));
         clientThread.kill();
 

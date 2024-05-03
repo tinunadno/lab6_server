@@ -19,9 +19,9 @@ public class InsertMoney extends Command implements CommandWithArgument, UserIdR
         int sum=Integer.parseInt(argument);
         try {
             LabWorkDAO.insertMoney(userID, sum);
-            ResponseManager.append("successfully added "+sum+" to your wallet");
+            responseManager.append("successfully added "+sum+" to your wallet");
         }catch (SQLException e){
-            ResponseManager.append("can't insert money on your account, check data you inserted");
+            responseManager.append("can't insert money on your account, check data you inserted");
         }
     }
     @Override

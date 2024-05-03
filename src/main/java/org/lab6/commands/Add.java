@@ -22,7 +22,7 @@ public class Add extends Command implements CommandWithParsedInstance, UserIdReq
 	public void setParsedInstance(LabWork parsedInstance){this.parsedInstance=parsedInstance;}
 	@Override
 	public void execute(){
-		LabWorkListManager.append(parsedInstance, userID, userName);
+		LabWorkListManager.append(parsedInstance, userID, userName, responseManager);
 	}
 	@Override
 	public String getComment(){

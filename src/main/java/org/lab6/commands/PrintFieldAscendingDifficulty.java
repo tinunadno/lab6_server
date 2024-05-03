@@ -5,7 +5,7 @@ import org.lab6.mainClasses.LabWorkListManager;
 public class PrintFieldAscendingDifficulty extends Command{
 	@Override
 	public void execute(){
-		LabWorkListManager.printFieldAscendingDifficulty();
+		LabWorkListManager.printFieldAscendingDifficulty(responseManager);
 	}
 	@Override
 	public String getComment(){

@@ -13,6 +13,7 @@ public class Controller {
     private InetAddress address;
     private ClientCommandManager clientThread;
     private int userID;
+    private ResponseManager responseManager;
     private String userName;
     /**
      * Map with command objects and names
@@ -41,12 +42,13 @@ public class Controller {
         comands.put("get_user_info", new GetUserInfo());
     }
 
-    public Controller(int port, InetAddress address, ClientCommandManager clientThread, int userID, String userName) {
+    public Controller(int port, InetAddress address, ClientCommandManager clientThread, int userID, String userName, ResponseManager responseManager) {
         this.port = port;
         this.address = address;
         this.clientThread = clientThread;
         this.userID = userID;
         this.userName=userName;
+        this.responseManager=responseManager;
     }
 
     /**
@@ -57,17 +59,10 @@ public class Controller {
     public void invoke(String key) {
         try {
             Command command = comands.get(key);
-            if (command.isGivesResponse()) {
-                ((ResponseCommand) command).setAddress(address);
-                ((ResponseCommand) command).setPort(port);
-            }
-            if (command.isInterruptsThread())
-                ((InterruptingCommand) command).setThread(clientThread);
-            if (command.isRequiresUserID())
-                ((UserIdRequire) command).setUserId(userID, userName);
+            setCommandFields(command);
             command.execute();
         } catch (NullPointerException e) {
-            ResponseManager.append("\"" + key + "\" is not a command, use help for syntax");
+            responseManager.append("\"" + key + "\" is not a command, use help for syntax");
         }
     }
 
@@ -81,53 +76,60 @@ public class Controller {
     public void invoke(String key, String argument) {
         try {
             Command command = comands.get(key);
-            if (command.isRequiresUserID())
-                ((UserIdRequire) command).setUserId(userID, userName);
             if (command.isRequiresArgument())
                 ((CommandWithArgument) command).setArgument(argument);
+            setCommandFields(command);
             comands.get(key).execute();
         } catch (NullPointerException e) {
-            ResponseManager.append("\"" + key + "\" is not a command, use help for syntax");
+            responseManager.append("\"" + key + "\" is not a command, use help for syntax");
         }
     }
 
     public void invoke(String key, LabWork labWork) {
         try {
             Command command = comands.get(key);
-            if (command.isRequiresUserID())
-                ((UserIdRequire) command).setUserId(userID, userName);
             if (command.isRequiresLabWorkInstance())
                 ((CommandWithParsedInstance) (comands.get(key))).setParsedInstance(labWork);
+            setCommandFields(command);
             comands.get(key).execute();
         } catch (NullPointerException e) {
-            ResponseManager.append("\"" + key + "\" is not a command, use help for syntax");
+            responseManager.append("\"" + key + "\" is not a command, use help for syntax");
         }
     }
 
     public void invoke(String key, String argument, LabWork labWork) {
         try {
             Command command = comands.get(key);
-            if (command.isRequiresUserID())
-                ((UserIdRequire) command).setUserId(userID, userName);
-            if (command.isRequiresLabWorkInstance())
-                ((CommandWithParsedInstance) (comands.get(key))).setParsedInstance(labWork);
             if (command.isRequiresArgument())
                 ((CommandWithArgument) command).setArgument(argument);
+            if (command.isRequiresLabWorkInstance())
+                ((CommandWithParsedInstance) (comands.get(key))).setParsedInstance(labWork);
+            setCommandFields(command);
             comands.get(key).execute();
         } catch (NullPointerException e) {
-            ResponseManager.append("\"" + key + "\" is not a command, use help for syntax");
+            responseManager.append("\"" + key + "\" is not a command, use help for syntax");
         }
     }
-
+    private void setCommandFields(Command command){
+        if(command.isInterruptsThread())
+            ((InterruptingCommand)command).setThread(clientThread);
+        if(command.isGivesResponse()) {
+            ((ResponseCommand) command).setAddress(address);
+            ((ResponseCommand) command).setPort(port);
+        }
+        if(command.isRequiresUserID())
+            ((UserIdRequire)command).setUserId(userID, userName);
+        ((RequireResponse)command).setResponseManager(responseManager);
+    }
     /**
      * showing command names and descriptions from commands Map
      */
-    public static void showComands() {
+    public static void showComands(ResponseManager responseManager) {
         String ret = "";
         for (Command value : comands.values()) {
             ret += (value.getComment().replace("%", "   ")) + "\n";
         }
-        ResponseManager.append(ret);
+        responseManager.append(ret);
     }
 
     public static ArrayList<ArrayList<String>> getSortedCommands() {

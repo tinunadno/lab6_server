@@ -1,6 +1,9 @@
 package org.lab6.commands;
 
-public abstract class Command implements CommandNoArgument{
+import org.lab6.mainClasses.ResponseManager;
+
+public abstract class Command implements CommandNoArgument, RequireResponse{
+    protected ResponseManager responseManager;
 
     private boolean requiresArgument=false;
     private boolean requiresLabWorkInstance=false;
@@ -18,6 +21,9 @@ public abstract class Command implements CommandNoArgument{
      * @return
      */
     public abstract String getComment();
+    public void setResponseManager(ResponseManager responseManager){
+        this.responseManager=responseManager;
+    };
     protected void setRequiresArgument(boolean value){requiresArgument=value;}
     protected void setRequiresLabWorkInstance(boolean value){requiresLabWorkInstance=value;}
     protected void setInterruptsThread(boolean value){interruptsThread=value;}

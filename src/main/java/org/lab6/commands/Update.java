@@ -4,7 +4,7 @@ import org.lab6.mainClasses.LabWorkListManager;
 import org.lab6.mainClasses.ResponseManager;
 import org.lab6.storedClasses.LabWork;
 
-public class Update extends Command implements CommandWithArgument, CommandWithParsedInstance, UserIdRequire {
+public class Update extends Command implements CommandWithArgument, CommandWithParsedInstance, UserIdRequire{
 	private LabWork parsedInstance;
 	private int userID;
 	private String userName;
@@ -25,9 +25,9 @@ public class Update extends Command implements CommandWithArgument, CommandWithP
 	public void execute(){
 		try {
 			int index = Integer.parseInt(argument);
-			LabWorkListManager.set(index, parsedInstance, userID);
+			LabWorkListManager.set(index, parsedInstance, userID, responseManager);
 		}catch(NumberFormatException e){
-			ResponseManager.append("can't interpretate "+argument+" as integer");
+			responseManager.append("can't interpretate "+argument+" as integer");
 		}
 	}
 	@Override

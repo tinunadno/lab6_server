@@ -9,7 +9,7 @@ public class FilterByDescription extends Command implements CommandWithArgument{
 	}
 	@Override
 	public void execute(){
-		LabWorkListManager.FilterByDescription(argument);
+		LabWorkListManager.FilterByDescription(argument, responseManager);
 	}
 	@Override
 	public String getComment(){

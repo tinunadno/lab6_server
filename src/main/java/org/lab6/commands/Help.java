@@ -2,11 +2,12 @@ package org.lab6.commands;
 
 
 import org.lab6.mainClasses.Controller;
+import org.lab6.mainClasses.ResponseManager;
 
-public class Help extends Command {
+public class Help extends Command{
 	@Override
 	public void execute(){
-		Controller.showComands();
+		Controller.showComands(responseManager);
 	}
 	@Override
 	public String getComment(){

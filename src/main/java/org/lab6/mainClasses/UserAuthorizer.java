@@ -26,7 +26,6 @@ public class UserAuthorizer {
 
                 UDP_transmitter.send(serverPort, address, new Message("Successfully added new user"));
             }catch(SQLException e){
-                ResponseManager.append(e.getMessage());
                 e.printStackTrace();
             }
         }

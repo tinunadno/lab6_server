@@ -13,11 +13,12 @@ public class GetListAsJson extends Command implements ResponseCommand{
     private InetAddress address;
     public GetListAsJson(){
         this.setGivesResponse(true);
+        this.setRequiresArgument(true);
     }
     @Override
     public void execute(){
         Message json=new Message(LabWorkListManager.toJson());
-        ResponseManager.append("successfully sent json file");
+        responseManager.append("successfully sent json file");
 
         UDP_transmitter.send(port, address, json);
         try{

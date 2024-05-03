@@ -13,7 +13,7 @@ public class RemoveByID extends Command implements CommandWithArgument, UserIdRe
 	@Override
 	public void execute(){
 		int index=Integer.parseInt(argument);
-		LabWorkListManager.remove(index, userID);
+		LabWorkListManager.remove(index, userID, responseManager);
 	}
 	@Override
 	public void setUserId(int userID, String userName){

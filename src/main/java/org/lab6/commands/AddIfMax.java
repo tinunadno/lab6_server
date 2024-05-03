@@ -20,7 +20,7 @@ public class AddIfMax extends Command implements CommandWithParsedInstance, User
 	public void setParsedInstance(LabWork parsedInstance){this.parsedInstance=parsedInstance;}
 	@Override
 	public void execute(){
-		LabWorkListManager.addIfMax(parsedInstance, userID, userName);
+		LabWorkListManager.addIfMax(parsedInstance, userID, userName, responseManager);
 	}
 	@Override
 	public String getComment(){
