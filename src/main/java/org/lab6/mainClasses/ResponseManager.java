@@ -4,7 +4,7 @@ import org.lab6.Main;
 
 import java.net.InetAddress;
 
-public class ResponseManager {
+public class ResponseManager implements Runnable{
     private  String responses="";
     private int port;
     private InetAddress address;
@@ -14,6 +14,10 @@ public class ResponseManager {
     }
     public  void append(String Message){
         responses+=Message+"\n";
+    }
+    @Override
+    public void run(){
+        this.sendMessage();
     }
     public  void sendMessage(){
         if(!responses.equals("")) {

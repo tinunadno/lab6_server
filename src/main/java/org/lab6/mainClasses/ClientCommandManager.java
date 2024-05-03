@@ -56,7 +56,7 @@ public class ClientCommandManager extends Thread{
             }else{
                 responseManager.append("bad token, try to send message again");
             }
-            responseManager.sendMessage();
+            Main.submitResponse(responseManager);
         }
     }
     public void kill(){
