@@ -16,11 +16,13 @@ public class UserAuthorizer {
     }
     public ResultSet init(){
         if((UDP_transmitter.get(port)).equals("r")){
-            String newUserName=((Message)UDP_transmitter.get(port)).getMessage();
-            String newUserPassword=((Message)UDP_transmitter.get(port)).getMessage();
-
-            String insert_query = "INSERT INTO users(userName, password, wallet)\nVALUES\n('"+newUserName+"','"+newUserPassword+"', 0)";
             try {
+            String newUserName=tryToRegister();
+
+
+
+            String newUserPassword=((Message)UDP_transmitter.get(port)).getMessage();
+            String insert_query = "INSERT INTO users(userName, password, wallet)\nVALUES\n('"+newUserName+"','"+newUserPassword+"', 0)";
                 Statement st=Main.getConnection().createStatement();
                 st.execute(insert_query);
 
@@ -86,4 +88,24 @@ public class UserAuthorizer {
             e.printStackTrace();
         }
     }
+    private String tryToRegister() throws SQLException{
+        boolean flag=false;
+        while(!flag) {
+            String newUserName = ((Message) UDP_transmitter.get(port)).getMessage();
+            String name_check_query = "SELECT * FROM users WHERE(username='" + newUserName + "')";
+            PreparedStatement s = Main.getConnection().prepareStatement(name_check_query);
+            ResultSet rs = s.executeQuery();
+            if (rs.next()) {
+                Message message=new Message("user with this name already exists");
+                UDP_transmitter.send(serverPort, address, message);
+            }
+            else{
+                Message message=new Message("");
+                UDP_transmitter.send(serverPort, address, message);
+                return newUserName;
+            }
+        }
+        return null;
+    }
+
 }

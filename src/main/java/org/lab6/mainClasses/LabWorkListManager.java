@@ -5,6 +5,7 @@ import org.lab6.storedClasses.LabWork;
 import org.lab6.storedClasses.Person;
 
 import java.io.FileWriter;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -171,6 +172,39 @@ public class LabWorkListManager {
 		}
 		else {
 			responseManager.append("list is empty");
+		}
+	}
+	public static void buyLabWork(int lwID, int userID,String userName, ResponseManager responseManager){
+		try {
+			ResultSet lw_info = LabWorkDAO.getLabWorkInfoForBuy(lwID);
+			double lw_price=Double.parseDouble(lw_info.getString("price"));
+			int lw_user_id=Integer.parseInt(lw_info.getString("user_id"));
+			if(lw_user_id==userID){
+				responseManager.append("this LabWork instance already yours");
+				return;
+			}
+			double userWallet=LabWorkDAO.getMoneyCount(userID);
+			if(userWallet<lw_price){
+				responseManager.append("you don't have enough money to buy labWork with ID:"+lwID);
+				return;
+			}
+			LabWorkDAO.insertMoney(userID, lw_price*-1.0);
+			System.out.println(lw_user_id);
+			System.out.println(lw_price);
+			System.out.print(lwID);
+			LabWorkDAO.insertMoney(lw_user_id, lw_price);
+			LabWorkDAO.changeLabWorkUser(lwID, userID, userName);
+			list.forEach(
+					(lw) ->{
+						if(lw.getID()==lwID) {
+							lw.setUserID(userID);
+							lw.setUserName(userName);
+						}
+					});
+			responseManager.append("successfully buyed LabWork with ID:"+lwID);
+		}catch (SQLException e){
+			e.printStackTrace();
+			responseManager.append("transaction cancelled because of some sql exceptions");
 		}
 	}
 

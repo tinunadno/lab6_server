@@ -7,7 +7,7 @@ import org.lab6.mainClasses.UDP_transmitter;
 
 public class UserWaiter {
     public static void startUserMonitor(){
-        while(true) {
+        while(Main.isRunning()) {
             UDP_transmitter.get(Main.getPort());
             Message message = new Message(Main.getCurrentPort() + "%" + Main.getCurrentServerPort());
             UDP_transmitter.send(Main.getServerPort(), Main.getAdress(), message);

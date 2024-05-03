@@ -40,6 +40,7 @@ public class Controller {
         comands.put("get_list_as_json", new GetListAsJson());
         comands.put("insert_money", new InsertMoney());
         comands.put("get_user_info", new GetUserInfo());
+        comands.put("buy_lab_work", new BuyLabWork());
     }
 
     public Controller(int port, InetAddress address, ClientCommandManager clientThread, int userID, String userName, ResponseManager responseManager) {

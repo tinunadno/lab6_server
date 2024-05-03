@@ -18,7 +18,9 @@ public class Main {
     private static InetAddress adress=null;
     private static Connection connection;
     private static ExecutorService responseExecutorService;
+    private static boolean isApplicationRunning;
     public static void main(String[] args) {
+        isApplicationRunning=true;
         responseExecutorService= Executors.newCachedThreadPool();
         String connectionUrl = "jdbc:postgresql://pg:5432/studs";
         String user="s409324";
@@ -55,5 +57,8 @@ public class Main {
     public static InetAddress getAdress(){return adress;}
     public static void submitResponse(ResponseManager responseManager){
         responseExecutorService.submit(responseManager);
+    }
+    public static boolean isRunning(){
+        return isApplicationRunning;
     }
 }

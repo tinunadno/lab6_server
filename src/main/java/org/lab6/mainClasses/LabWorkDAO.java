@@ -109,6 +109,7 @@ public class LabWorkDAO {
 
         String lw_query="SELECT user_id, author, coordinates FROM labwork WHERE(id="+lwID+")";
         PreparedStatement s = Main.getConnection().prepareStatement(lw_query);
+
         ResultSet lw_KeysSet = s.executeQuery();
         lw_KeysSet.next();
         if(userID!=Integer.parseInt(lw_KeysSet.getString("user_id")))throw new IllegalUserAccessException(
@@ -136,8 +137,20 @@ public class LabWorkDAO {
         delete_st.execute(person_update_query);
         delete_st.execute(labwork_update_query);
     }
+    public static synchronized void changeLabWorkUser(int lwID, int userNewID, String userName) throws SQLException{
+        String lw_update_query="UPDATE labwork SET user_id="+userNewID+", username='"+userName+"' WHERE(id="+lwID+")";
+        Statement update_st=Main.getConnection().createStatement();
+        update_st.execute(lw_update_query);
+    }
+    public static synchronized ResultSet getLabWorkInfoForBuy(int lwID) throws SQLException{
+        String priceQuery="SELECT price, user_id FROM labwork WHERE(id="+lwID+")";
+        PreparedStatement s=Main.getConnection().prepareStatement(priceQuery);
+        ResultSet price_value=s.executeQuery();
+        price_value.next();
+        return price_value;
+    }
     public static synchronized double getMoneyCount(int userID) throws SQLException{
-        String wallet_query="SELECT wallet FROM users WHERE(id=0"+userID+")";
+        String wallet_query="SELECT wallet FROM users WHERE(id="+userID+")";
         PreparedStatement s = Main.getConnection().prepareStatement(wallet_query);
         ResultSet wallet_KeysSet = s.executeQuery();
         wallet_KeysSet.next();
