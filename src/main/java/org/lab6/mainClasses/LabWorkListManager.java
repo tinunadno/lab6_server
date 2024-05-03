@@ -189,9 +189,6 @@ public class LabWorkListManager {
 				return;
 			}
 			LabWorkDAO.insertMoney(userID, lw_price*-1.0);
-			System.out.println(lw_user_id);
-			System.out.println(lw_price);
-			System.out.print(lwID);
 			LabWorkDAO.insertMoney(lw_user_id, lw_price);
 			LabWorkDAO.changeLabWorkUser(lwID, userID, userName);
 			list.forEach(

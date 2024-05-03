@@ -38,6 +38,7 @@ public class ClientCommandManager extends Thread{
         try{Thread.sleep(150);}catch (InterruptedException e){}
         Message tokenMessage=new Message("token:", userToken);
         UDP_transmitter.send(port, adress, tokenMessage);
+        Main.appendConnectedUsers(this);
         controller=new Controller(serverPort, adress, this, userID, userName, responseManager);
         while(isAlive){
             SendedCommand sendedCommand = UDP_transmitter.get(port);
@@ -58,6 +59,11 @@ public class ClientCommandManager extends Thread{
             }
             Main.submitResponse(responseManager);
         }
+        Main.removeConnectedUser(this);
+    }
+    @Override
+    public String toString(){
+        return "[User name:"+userName+"; userID:"+userID+"; port<client-server>:"+port+";\n port<server-client>:"+serverPort+"; client adress:"+adress.toString()+"]";
     }
     public void kill(){
         isAlive=false;

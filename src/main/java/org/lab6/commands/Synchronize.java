@@ -12,8 +12,6 @@ public class Synchronize extends Command implements ResponseCommand{
         this.setGivesResponse(true);
     }
     public void execute(){
-        System.out.println(port);
-        System.out.println(port);
         CommandListSynchronizer.synchronizeCommandListWithClient(port, address);
     }
     public void setPort(int port){

@@ -63,13 +63,11 @@ public class DBParser {
 
 
                 LabWork labWork=new LabWork(lw_id, lw_userID,lw_userName,lw_price, lw_name, coordinates, lw_creationDate, lw_minimalPoint, lw_description, lw_tunedInWorks, lw_difficulty, person);
-                System.out.println(labWork.getID());
                 labWorkArrayList.add(labWork);
 
             }
 
         }catch(SQLException e){
-            System.out.println("bad querry");
             e.printStackTrace();
         }
         return labWorkArrayList;

@@ -24,7 +24,7 @@ public class GetListAsJson extends Command implements ResponseCommand{
         try{
             Thread.sleep(100);
         }catch (InterruptedException e){
-            System.out.println("interrupted, failed to wait response");
+            e.printStackTrace();
         }
     }
     @Override

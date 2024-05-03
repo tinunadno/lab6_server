@@ -45,7 +45,7 @@ public class UserAuthorizer {
         try {
             s = Main.getConnection().prepareStatement(query);
         }catch(SQLException e){
-            System.out.println("bad query");
+            e.printStackTrace();
         }
         while(true) {
             String userName = ((Message) UDP_transmitter.get(port)).getMessage();
@@ -62,7 +62,7 @@ public class UserAuthorizer {
                 Message message=new Message("can't find user with this name");
                 UDP_transmitter.send(serverPort, address, message);
             } catch (SQLException e) {
-                System.out.println("can't send query to DataBase");
+                e.printStackTrace();
             }
         }
     }
@@ -84,7 +84,6 @@ public class UserAuthorizer {
                 UDP_transmitter.send(serverPort, address, message);
             }
         }catch(SQLException e){
-            System.out.println("bad querry");
             e.printStackTrace();
         }
     }

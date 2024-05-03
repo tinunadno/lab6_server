@@ -14,7 +14,7 @@ public class UDP_transmitter {
         try {
             ds = new DatagramSocket();
         }catch(SocketException e){
-            System.out.println("can't create datagramSocket");
+            e.printStackTrace();
         }
         //Serializing Object
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -23,7 +23,7 @@ public class UDP_transmitter {
             oos.writeObject(object);
             oos.close();
         }catch(IOException e){
-            System.out.println("can't serialize object");
+            e.printStackTrace();
         }
         byte[] objBytes = bos.toByteArray();
 
@@ -33,7 +33,7 @@ public class UDP_transmitter {
         try {
             ds.send(dp);
         }catch (IOException e){
-            System.out.println("can't send this Buffer");
+            e.printStackTrace();
         }
 
         //sending object
@@ -41,7 +41,7 @@ public class UDP_transmitter {
         try {
             ds.send(dp);
         }catch (IOException e){
-            System.out.println("can't send this Buffer");
+            e.printStackTrace();
         }
         ds.close();
     }
@@ -51,7 +51,6 @@ public class UDP_transmitter {
         try {
             ds = new DatagramSocket(port);
         }catch(SocketException e){
-            System.out.println("can't create DatagramSocket");
             e.printStackTrace();
         }
         //ds.setSoTimeout(1000);
@@ -61,7 +60,7 @@ public class UDP_transmitter {
         try {
             ds.receive(dp);
         }catch (IOException e){
-            System.out.println("can't recieve message");
+            e.printStackTrace();
         }
         if(Main.getAdress()==null)
             Main.setInetAdress(dp.getAddress());
@@ -71,7 +70,7 @@ public class UDP_transmitter {
         try {
             ds.receive(dp);
         }catch (IOException e){
-            System.out.println("can't recieve message");
+            e.printStackTrace();
         }
         ds.close();
         //deserializing object
@@ -80,10 +79,11 @@ public class UDP_transmitter {
             ObjectInput in = new ObjectInputStream(bis);
             return (T) in.readObject();
         }catch(IOException e){
-            System.out.println("can't deserialize object");
+            e.printStackTrace();
 
         }catch (ClassNotFoundException e){
-            System.out.println("can't find object class");
+            e.printStackTrace();
+
         }
         return null;
     }

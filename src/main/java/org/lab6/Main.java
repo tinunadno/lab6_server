@@ -8,9 +8,13 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 
 public class Main {
+    private static List<ClientCommandManager> connectedUsers;
     private static int port=17937;
     private static int currentPort=17749;
     private static int currentServerPort=17750;
@@ -20,6 +24,7 @@ public class Main {
     private static ExecutorService responseExecutorService;
     private static boolean isApplicationRunning;
     public static void main(String[] args) {
+        connectedUsers=new ArrayList<>();
         isApplicationRunning=true;
         responseExecutorService= Executors.newCachedThreadPool();
         String connectionUrl = "jdbc:postgresql://pg:5432/studs";
@@ -60,5 +65,23 @@ public class Main {
     }
     public static boolean isRunning(){
         return isApplicationRunning;
+    }
+    public static void appendConnectedUsers(ClientCommandManager ccm){
+        int prevLen=connectedUsers.size();
+        connectedUsers.add(ccm);
+        showConnectedUsers(prevLen);
+
+    }
+    public static void removeConnectedUser(ClientCommandManager ccm){
+        int prevLen=connectedUsers.size();
+        connectedUsers.removeIf(clientCommandManager -> (clientCommandManager.equals(ccm)));
+        showConnectedUsers(prevLen);
+    }
+    public static void showConnectedUsers(int prevLen){
+        for(int i=0;i<prevLen*2; i++) {
+            System.out.print(String.format("\033[%dA", 1));
+            System.out.print("\033[2K");
+        }
+        connectedUsers.forEach(clientCommandManager -> System.out.print(clientCommandManager+"\n"));
     }
 }
