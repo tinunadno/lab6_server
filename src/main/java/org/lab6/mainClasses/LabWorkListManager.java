@@ -35,7 +35,7 @@ public class LabWorkListManager {
 			responseManager.append("successfully added new instance");
 		}catch(SQLException e){
 			responseManager.append("SERVER_ERROR:can't add LabWork instance to DataBase");
-			e.printStackTrace();
+		//	e.printStackTrace();
 		}
 	}
 
@@ -56,7 +56,7 @@ public class LabWorkListManager {
 					list.set(i, lw);
 					responseManager.append("successfully updated instance with id "+id);
 				}catch (SQLException e){
-					e.printStackTrace();
+					//e.printStackTrace();
 					responseManager.append("SERVER_ERROR:can't update instance with id "+id+", because unpredictable sql error");
 				}catch (IllegalUserAccessException e){
 					responseManager.append(e.getMessage());
@@ -80,7 +80,7 @@ public class LabWorkListManager {
 		}
 		catch(SQLException e){
 			responseManager.append("SERVER_ERROR:can't delete LabWork instance with id "+id+", because sql unpredictable mistake");
-			e.printStackTrace();
+			//e.printStackTrace();
 		}catch (IllegalUserAccessException e){
 			responseManager.append(e.getMessage());
 		}
@@ -100,7 +100,7 @@ public class LabWorkListManager {
 			responseManager.append("successfully cleared LabWork Base");
 		}catch(SQLException e){
 			responseManager.append("SERVER_ERROR:can't clear LabWork instances of current user");
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 
@@ -200,7 +200,7 @@ public class LabWorkListManager {
 					});
 			responseManager.append("successfully buyed LabWork with ID:"+lwID);
 		}catch (SQLException e){
-			e.printStackTrace();
+			//e.printStackTrace();
 			responseManager.append("transaction cancelled because of some sql exceptions");
 		}
 	}

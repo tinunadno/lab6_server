@@ -13,7 +13,9 @@ public class BuyLabWork extends Command implements CommandWithArgument, UserIdRe
 
     @Override
     public void execute(){
-        LabWorkListManager.buyLabWork(lwID, userID, userName, responseManager);
+        if(this.lwID!=-1) {
+            LabWorkListManager.buyLabWork(lwID, userID, userName, responseManager);
+        }
     }
     @Override
     public void setArgument(String argument){
@@ -21,6 +23,7 @@ public class BuyLabWork extends Command implements CommandWithArgument, UserIdRe
             this.lwID = Integer.parseInt(argument);
         }catch (NumberFormatException e){
             responseManager.append(argument+" is not number, so it can't be applied as LabWork ID");
+            this.lwID=-1;
         }
     }
     @Override
