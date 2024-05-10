@@ -21,7 +21,7 @@ public class UserAuthorizer {
 
 
 
-            String newUserPassword=((Message)UDP_transmitter.get(port)).getMessage();
+            String newUserPassword=HashPasswords.toSHA384(((Message)UDP_transmitter.get(port)).getMessage());
             String insert_query = "INSERT INTO users(userName, password, wallet)\nVALUES\n('"+newUserName+"','"+newUserPassword+"', 0)";
                 Statement st=Main.getConnection().createStatement();
                 st.execute(insert_query);
@@ -74,7 +74,7 @@ public class UserAuthorizer {
             userPasswordSet.next();
             String userPassword = userPasswordSet.getString("password");
             while(true){
-                String userPasswordFromClient = ((Message) UDP_transmitter.get(port)).getMessage();
+                String userPasswordFromClient = HashPasswords.toSHA384(((Message) UDP_transmitter.get(port)).getMessage());
                 if(userPassword.equals(userPasswordFromClient)){
                     Message message=new Message("SUCCESS");
                     UDP_transmitter.send(serverPort, address, message);
