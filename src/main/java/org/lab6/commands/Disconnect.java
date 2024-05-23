@@ -2,12 +2,11 @@ package org.lab6.commands;
 
 import org.lab6.mainClasses.ClientCommandManager;
 import org.lab6.mainClasses.Message;
-import org.lab6.mainClasses.LabWorkListManager;
 import org.lab6.mainClasses.UDP_transmitter;
 
 import java.net.InetAddress;
 
-public class Disconnect extends Command implements ResponseCommand, InterruptingCommand{
+public class Disconnect extends Command implements ResponseCommand, ThreadInteractingCommand {
     private int port;
     private InetAddress address;
     private ClientCommandManager clientThread;

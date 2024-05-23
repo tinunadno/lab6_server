@@ -12,14 +12,14 @@ public class ResponseManager implements Runnable{
         this.port=port;
         this.address=address;
     }
-    public  void append(String Message){
+    public void append(String Message){
         responses+=Message+"\n";
     }
     @Override
     public void run(){
         this.sendMessage();
     }
-    public  void sendMessage(){
+    public void sendMessage(){
         if(!responses.equals("")) {
             Message response = new Message(responses);
             UDP_transmitter.send(port, address, response);

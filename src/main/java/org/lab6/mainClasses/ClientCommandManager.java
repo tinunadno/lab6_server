@@ -17,29 +17,25 @@ public class ClientCommandManager extends Thread{
     private String userName;
     private UUID userToken;
     private ResponseManager responseManager;
+    private boolean isAuthorized;
+    private boolean isAuthorizedName;
     public ClientCommandManager(int port, int serverPort){
         this.port=port;
         this.serverPort=serverPort;
         this.adress=Main.getAdress();
         this.responseManager=new ResponseManager(serverPort, adress);
+        this.isAuthorized=false;
         isAlive=true;
-    }
-    @Override
-    public void run(){
-        UserAuthorizer userAuthorizer=new UserAuthorizer(port, serverPort, adress);
-        ResultSet userInfo =userAuthorizer.init();
-        try{
-            userID=Integer.parseInt(userInfo.getString("id"));
-            userName=userInfo.getString("username");
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
+
         userToken=UUID.randomUUID();
         try{Thread.sleep(150);}catch (InterruptedException e){}
         Message tokenMessage=new Message("token:", userToken);
         UDP_transmitter.send(port, adress, tokenMessage);
         Main.appendConnectedUsers(this);
-        controller=new Controller(serverPort, adress, this, userID, userName, responseManager);
+        controller=new Controller(serverPort, adress, this, responseManager);
+    }
+    @Override
+    public void run(){
         while(isAlive){
             SendedCommand sendedCommand = UDP_transmitter.get(port);
             if(userToken.equals(sendedCommand.getToken())) {
@@ -61,6 +57,23 @@ public class ClientCommandManager extends Thread{
         }
         Main.removeConnectedUser(this);
     }
+
+    public void setIsAuthorized(boolean val){
+        this.isAuthorized=val;
+    }
+    public void setAuthorizedName(boolean val){
+        this.isAuthorizedName=val;
+    }
+    public void setUserName(String name){
+        this.userName=name;
+        controller.setUserName(name);
+    }
+    public void setUserID(int ID) {
+        this.userID=ID;
+        controller.setUserID(ID);
+    }
+    public int getUserId(){return userID;}
+    public String getUserName(){return this.userName;}
     @Override
     public String toString(){
         return "[User name:"+userName+"; userID:"+userID+"; port<client-server>:"+port+";\n port<server-client>:"+serverPort+"; client adress:"+adress.toString()+"]";

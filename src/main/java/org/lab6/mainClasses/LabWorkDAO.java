@@ -166,4 +166,27 @@ public class LabWorkDAO {
         Statement update_st = Main.getConnection().createStatement();
         update_st.execute(update_query);
     }
+    public static synchronized int getUserID(String userName) throws SQLException{
+        String user_query="SELECT id FROM users WHERE(username='"+userName+"')";
+        PreparedStatement statement=Main.getConnection().prepareStatement(user_query);
+        ResultSet userID=statement.executeQuery();
+        if(userID.next()){
+            return Integer.parseInt(userID.getString("id"));
+        }
+        return -1;
+    }
+
+    public static synchronized String getUserPassword(String userName) throws SQLException{
+        String query = "SELECT password FROM Users WHERE(username='"+userName+"')";
+        PreparedStatement statement=Main.getConnection().prepareStatement(query);
+        ResultSet pswdSet=statement.executeQuery();
+        pswdSet.next();
+        String ret=pswdSet.getString("password");
+        return ret;
+    }
+    public static synchronized void insertNewUser(String name, String password) throws SQLException{
+        String insert_query = "INSERT INTO users(userName, password, wallet)\nVALUES\n('"+name+"','"+password+"', 0)";
+        Statement st=Main.getConnection().createStatement();
+        st.execute(insert_query);
+    }
 }

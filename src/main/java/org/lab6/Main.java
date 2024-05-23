@@ -33,7 +33,7 @@ public class Main {
 
         try {
             Class.forName("org.postgresql.Driver").getDeclaredConstructor().newInstance();
-            Connection connection=DriverManager.getConnection(connectionUrl, user, password);
+            connection=DriverManager.getConnection(connectionUrl, user, password);
             if(connection!=null)System.out.println("Successfully connected to DataBase!");
             else System.out.println("failed to connect to DataBase, connection is null");
         }catch (ClassNotFoundException e) {

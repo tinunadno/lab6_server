@@ -9,6 +9,7 @@ public class UserWaiter {
     public static void startUserMonitor(){
         while(Main.isRunning()) {
             UDP_transmitter.get(Main.getPort());
+            try{Thread.sleep(400);}catch(InterruptedException e){}
             Message message = new Message(Main.getCurrentPort() + "%" + Main.getCurrentServerPort());
             UDP_transmitter.send(Main.getServerPort(), Main.getAdress(), message);
             (new ClientCommandManager(Main.getCurrentPort(), Main.getCurrentServerPort())).start();

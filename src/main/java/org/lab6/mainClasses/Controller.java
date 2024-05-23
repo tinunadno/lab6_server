@@ -41,14 +41,16 @@ public class Controller {
         comands.put("insert_money", new InsertMoney());
         comands.put("get_user_info", new GetUserInfo());
         comands.put("buy_lab_work", new BuyLabWork());
+        comands.put("authorize_name_a", new InsertUserNameAuthorize());
+        comands.put("authorize_name_r", new InsertUserNameRegister());
+        comands.put("authorize_password_a", new InsertUserPasswordAuthorize());
+        comands.put("authorize_password_r", new InsertUserPasswordRegister());
     }
 
-    public Controller(int port, InetAddress address, ClientCommandManager clientThread, int userID, String userName, ResponseManager responseManager) {
+    public Controller(int port, InetAddress address, ClientCommandManager clientThread, ResponseManager responseManager) {
         this.port = port;
         this.address = address;
         this.clientThread = clientThread;
-        this.userID = userID;
-        this.userName=userName;
         this.responseManager=responseManager;
     }
 
@@ -113,7 +115,7 @@ public class Controller {
     }
     private void setCommandFields(Command command){
         if(command.isInterruptsThread())
-            ((InterruptingCommand)command).setThread(clientThread);
+            ((ThreadInteractingCommand)command).setThread(clientThread);
         if(command.isGivesResponse()) {
             ((ResponseCommand) command).setAddress(address);
             ((ResponseCommand) command).setPort(port);
@@ -121,6 +123,12 @@ public class Controller {
         if(command.isRequiresUserID())
             ((UserIdRequire)command).setUserId(userID, userName);
         ((RequireResponse)command).setResponseManager(responseManager);
+    }
+    public void setUserID(int userID){
+        this.userID=userID;
+    }
+    public void setUserName(String userName){
+        this.userName=userName;
     }
     /**
      * showing command names and descriptions from commands Map
