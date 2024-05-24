@@ -4,13 +4,13 @@ import org.lab6.commands.*;
 import org.lab6.storedClasses.LabWork;
 
 import java.net.InetAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Controller {
-    private int port;
-    private InetAddress address;
     private ClientCommandManager clientThread;
     private int userID;
     private ResponseManager responseManager;
@@ -47,9 +47,7 @@ public class Controller {
         comands.put("authorize_password_r", new InsertUserPasswordRegister());
     }
 
-    public Controller(int port, InetAddress address, ClientCommandManager clientThread, ResponseManager responseManager) {
-        this.port = port;
-        this.address = address;
+    public Controller(ClientCommandManager clientThread, ResponseManager responseManager) {
         this.clientThread = clientThread;
         this.responseManager=responseManager;
     }
@@ -116,10 +114,6 @@ public class Controller {
     private void setCommandFields(Command command){
         if(command.isInterruptsThread())
             ((ThreadInteractingCommand)command).setThread(clientThread);
-        if(command.isGivesResponse()) {
-            ((ResponseCommand) command).setAddress(address);
-            ((ResponseCommand) command).setPort(port);
-        }
         if(command.isRequiresUserID())
             ((UserIdRequire)command).setUserId(userID, userName);
         ((RequireResponse)command).setResponseManager(responseManager);

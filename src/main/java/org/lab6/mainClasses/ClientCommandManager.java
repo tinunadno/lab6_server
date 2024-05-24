@@ -3,14 +3,13 @@ package org.lab6.mainClasses;
 import org.lab6.Main;
 
 import java.net.InetAddress;
+import java.net.SocketAddress;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
 public class ClientCommandManager extends Thread{
-    private int port;
-    private int serverPort;
-    private InetAddress adress;
+    private SocketAddress address;
     private Controller controller;
     private boolean isAlive;
     private int userID;
@@ -19,26 +18,25 @@ public class ClientCommandManager extends Thread{
     private ResponseManager responseManager;
     private boolean isAuthorized;
     private boolean isAuthorizedName;
-    public ClientCommandManager(int port, int serverPort){
-        this.port=port;
-        this.serverPort=serverPort;
-        this.adress=Main.getAdress();
-        this.responseManager=new ResponseManager(serverPort, adress);
+    public ClientCommandManager(SocketAddress address){
+        this.address=address;
+        this.responseManager=new ResponseManager(address);
+        controller=new Controller(this, responseManager);
         this.isAuthorized=false;
         isAlive=true;
 
         userToken=UUID.randomUUID();
-        try{Thread.sleep(150);}catch (InterruptedException e){}
         Message tokenMessage=new Message("token:", userToken);
-        UDP_transmitter.send(port, adress, tokenMessage);
-        Main.appendConnectedUsers(this);
-        controller=new Controller(serverPort, adress, this, responseManager);
+        ClientInteractionManager.send(address, tokenMessage);
+    }
+    private SendedCommand sendedCommand;
+    public void setSendedCommand(SendedCommand sc){
+        this.sendedCommand=sc;
     }
     @Override
     public void run(){
-        while(isAlive){
-            SendedCommand sendedCommand = UDP_transmitter.get(port);
-            if(userToken.equals(sendedCommand.getToken())) {
+        if(isAlive) {
+            if (userToken.equals(sendedCommand.getToken())) {
                 try {
                     if (sendedCommand.isArgumentExists() && sendedCommand.isNeedParsedInstance()) controller.invoke(
                             sendedCommand.getCommandName(), sendedCommand.getArgument(), sendedCommand.getParsedInstance());
@@ -50,12 +48,11 @@ public class ClientCommandManager extends Thread{
                 } catch (NullPointerException e) {
                     responseManager.append("can't deserialize object on server");
                 }
-            }else{
+            } else {
                 responseManager.append("bad token, try to send message again");
             }
-            Main.submitResponse(responseManager);
+            responseManager.sendMessage();
         }
-        Main.removeConnectedUser(this);
     }
 
     public void setIsAuthorized(boolean val){
@@ -72,13 +69,15 @@ public class ClientCommandManager extends Thread{
         this.userID=ID;
         controller.setUserID(ID);
     }
+    public SocketAddress getUserAddress(){return address;}
     public int getUserId(){return userID;}
     public String getUserName(){return this.userName;}
     @Override
     public String toString(){
-        return "[User name:"+userName+"; userID:"+userID+"; port<client-server>:"+port+";\n port<server-client>:"+serverPort+"; client adress:"+adress.toString()+"]";
+        return "[User name:"+userName+"; userID:"+userID+"; client address:"+address.toString()+"]\n";
     }
     public void kill(){
         isAlive=false;
+        ClientInteractionManager.removeConnectedUser(address);
     }
 }

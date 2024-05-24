@@ -4,11 +4,10 @@ import org.lab6.Main;
 import org.lab6.mainClasses.LabWorkListManager;
 import org.lab6.mainClasses.Message;
 import org.lab6.mainClasses.ResponseManager;
-import org.lab6.mainClasses.UDP_transmitter;
 
 import java.net.InetAddress;
 
-public class GetListAsJson extends Command implements ResponseCommand{
+public class GetListAsJson extends Command{
     private int port;
     private InetAddress address;
     public GetListAsJson(){
@@ -17,23 +16,8 @@ public class GetListAsJson extends Command implements ResponseCommand{
     }
     @Override
     public void execute(){
-        Message json=new Message(LabWorkListManager.toJson());
-        responseManager.append("successfully sent json file");
-
-        UDP_transmitter.send(port, address, json);
-        try{
-            Thread.sleep(100);
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
-    }
-    @Override
-    public void setPort(int port){
-        this.port=port;
-    }
-    @Override
-    public void setAddress(InetAddress address){
-        this.address=address;
+        String json=(LabWorkListManager.toJson());
+        responseManager.append(json);
     }
     @Override
     public String getComment(){return "get_list_as_json%возвращает LabWork list в формате json";}

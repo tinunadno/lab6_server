@@ -1,24 +1,21 @@
 package org.lab6.commands;
 
-import org.lab6.mainClasses.CommandListSynchronizer;
-import org.lab6.mainClasses.Message;
+import org.lab6.mainClasses.*;
 
 import java.net.InetAddress;
+import java.util.Arrays;
 
-public class Synchronize extends Command implements ResponseCommand{
-    private int port;
-    private InetAddress address;
+public class Synchronize extends Command implements ThreadInteractingCommand{
+    private ClientCommandManager clientThread;
     public Synchronize(){
-        this.setGivesResponse(true);
+        this.setInterruptsThread(true);
     }
     public void execute(){
-        CommandListSynchronizer.synchronizeCommandListWithClient(port, address);
+        ClientInteractionManager.send(clientThread.getUserAddress(), Controller.getSortedCommands());
     }
-    public void setPort(int port){
-        this.port=port;
-    }
-    public void setAddress(InetAddress address){
-        this.address=address;
+    @Override
+    public void setThread(ClientCommandManager clientThread){
+        this.clientThread=clientThread;
     }
     public String getComment(){
         return "Synchronize%User Mustn't see this, it's service command";
