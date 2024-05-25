@@ -15,28 +15,9 @@ import java.util.concurrent.*;
 
 public class Main {
     private static int port=17938;
-    private static Connection connection;
     private static boolean isApplicationRunning;
     public static void main(String[] args) {
         isApplicationRunning=true;
-        String connectionUrl = "jdbc:postgresql://pg:5432/studs";
-        String user="s409324";
-        String password="IIcX*5966";
-
-        try {
-            Class.forName("org.postgresql.Driver").getDeclaredConstructor().newInstance();
-            connection=DriverManager.getConnection(connectionUrl, user, password);
-            if(connection!=null)System.out.println("Successfully connected to DataBase!");
-            else System.out.println("failed to connect to DataBase, connection is null");
-        }catch (ClassNotFoundException e) {
-            System.out.println("ERROR:No JDBC driver found");
-        }catch(SQLException e) {
-            System.out.println("ERROR:can't connect to database");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
-
 
         LabWorkListManager.init();
         ClientInteractionManager cim=new ClientInteractionManager(port);
@@ -52,7 +33,6 @@ public class Main {
             }
         });
     }
-    public static Connection getConnection(){return connection;}
     public static boolean isRunning(){
         return isApplicationRunning;
     }

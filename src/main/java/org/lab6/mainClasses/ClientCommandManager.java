@@ -57,6 +57,7 @@ public class ClientCommandManager extends Thread{
 
     public void setIsAuthorized(boolean val){
         this.isAuthorized=val;
+        ClientInteractionManager.showUser();
     }
     public void setAuthorizedName(boolean val){
         this.isAuthorizedName=val;

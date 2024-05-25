@@ -3,18 +3,17 @@ package org.lab6.mainClasses;
 import org.lab6.Main;
 import org.lab6.storedClasses.*;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class DBParser {
     public static ArrayList<LabWork> parseLabWorkFromDB(){
+        Connection connection=LabWorkDAO.getConnection();
         ArrayList<LabWork> labWorkArrayList=new ArrayList<>();
         String query = "SELECT * FROM LabWork";
         PreparedStatement st=null;
         try {
-            st = Main.getConnection().prepareStatement(query);
+            st = connection.prepareStatement(query);
             ResultSet LabWorkSet = st.executeQuery();
 
             while(LabWorkSet.next()){
@@ -32,7 +31,7 @@ public class DBParser {
 
                 String cords_id=LabWorkSet.getString("coordinates");
                 String cords_query="SELECT * FROM coordinates WHERE(id="+cords_id+")";
-                PreparedStatement cords_st=Main.getConnection().prepareStatement(cords_query);
+                PreparedStatement cords_st=connection.prepareStatement(cords_query);
                 ResultSet coordinatesSet=cords_st.executeQuery();
                 coordinatesSet.next();
                 float cords_x=Float.parseFloat(coordinatesSet.getString("x"));
@@ -41,7 +40,7 @@ public class DBParser {
 
                 String person_id=LabWorkSet.getString("author");
                 String person_query="SELECT * FROM person WHERE(id="+person_id+")";
-                PreparedStatement person_st=Main.getConnection().prepareStatement(person_query);
+                PreparedStatement person_st=connection.prepareStatement(person_query);
                 ResultSet personSet=person_st.executeQuery();
                 personSet.next();
                 String person_name=personSet.getString("name");
@@ -50,7 +49,7 @@ public class DBParser {
 
                 String location_id=personSet.getString("location");
                 String location_query="SELECT * FROM location WHERE(id="+location_id+")";
-                PreparedStatement location_st=Main.getConnection().prepareStatement(location_query);
+                PreparedStatement location_st=connection.prepareStatement(location_query);
                 ResultSet locationSet=location_st.executeQuery();
                 locationSet.next();
                 float location_x=Float.parseFloat(locationSet.getString("x"));
@@ -66,8 +65,13 @@ public class DBParser {
                 labWorkArrayList.add(labWork);
 
             }
-
+            connection.commit();
+            connection.close();
         }catch(SQLException e){
+            try {
+                connection.rollback();
+                connection.close();
+            }catch (SQLException e1){}
             e.printStackTrace();
         }
         return labWorkArrayList;

@@ -6,50 +6,56 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 
-public class Server_UDP_acceptor implements Runnable{
+public class Server_UDP_acceptor implements Runnable {
     DatagramChannel channel;
     InetSocketAddress address;
     ByteBuffer buffer;
     ByteBuffer clientAcceptBuffer;
     InetSocketAddress clientAddress;
-    public Server_UDP_acceptor(int port){
+
+    public Server_UDP_acceptor(int port) {
         try {
             channel = DatagramChannel.open();
             address = new InetSocketAddress(port);
             channel.bind(address);
             buffer = ByteBuffer.allocate(1024);
-            clientAcceptBuffer=ByteBuffer.allocate(1024);
-        }catch(IOException e){
+            clientAcceptBuffer = ByteBuffer.allocate(1024);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     @Override
-    public void run(){
+    public void run() {
         send(userSendingAddress, sendingObject);
     }
-    public void send(SocketAddress address, Object sendingObject){
+
+    public void send(SocketAddress address, Object sendingObject) {
         try {
-            ByteArrayOutputStream bos=new ByteArrayOutputStream();
-            ObjectOutputStream oos=new ObjectOutputStream(bos);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
             oos.writeObject(sendingObject);
             oos.close();
             ByteBuffer buffer = ByteBuffer.wrap(bos.toByteArray());
             channel.send(buffer, address);
             buffer.clear();
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     private Object sendingObject;
     private SocketAddress userSendingAddress;
-    public void setUserSendingAddress(SocketAddress address){
-        this.userSendingAddress=address;
-    }
-    public void setSendingObject(Object obj){
-        this.sendingObject=obj;
+
+    public void setUserSendingAddress(SocketAddress address) {
+        this.userSendingAddress = address;
     }
 
-    public Object get(){
+    public void setSendingObject(Object obj) {
+        this.sendingObject = obj;
+    }
+
+    public Object get() {
         try {
             clientAddress = (InetSocketAddress) channel.receive(clientAcceptBuffer);
             clientAcceptBuffer.flip();
@@ -61,18 +67,22 @@ public class Server_UDP_acceptor implements Runnable{
             Object ret = in.readObject();
             clientAcceptBuffer.clear();
             return ret;
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
-        }catch(ClassNotFoundException e){
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         return null;
     }
-    public InetSocketAddress getUserAdress(){return clientAddress;}
-    public void clearChannel(){
+
+    public InetSocketAddress getUserAdress() {
+        return clientAddress;
+    }
+
+    public void clearChannel() {
         try {
             channel.close();
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

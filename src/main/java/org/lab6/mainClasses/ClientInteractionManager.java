@@ -39,8 +39,10 @@ public class ClientInteractionManager {
         }else{
             ClientCommandManager ccm=new ClientCommandManager(userAddress);
             currentClients.put(userAddress, ccm);
-            ConnectedUserImage.showUsers(currentClients);
         }
+    }
+    public static void showUser(){
+        ConnectedUserImage.showUsers(cim.currentClients);
     }
     public static void send(SocketAddress clientAddress, Object obj){
         cim.transmitter.setSendingObject(obj);
