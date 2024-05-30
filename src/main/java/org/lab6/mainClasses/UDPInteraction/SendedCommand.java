@@ -1,6 +1,5 @@
-package org.lab6.mainClasses;
+package org.lab6.mainClasses.UDPInteraction;
 
-import org.lab6.Main;
 import org.lab6.storedClasses.LabWork;
 
 import java.io.Serializable;

@@ -5,6 +5,9 @@ import org.lab6.mainClasses.Controller;
 import org.lab6.mainClasses.ResponseManager;
 
 public class Help extends Command{
+	public Help(){
+		this.setUserGUIAvailable(true);
+	}
 	@Override
 	public void execute(){
 		Controller.showComands(responseManager);

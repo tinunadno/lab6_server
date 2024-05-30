@@ -11,6 +11,7 @@ public class GetUserInfo  extends Command implements UserIdRequire{
     private String userName;
     public GetUserInfo(){
         this.setRequiresUserID(true);
+        this.setUserGUIAvailable(true);
     }
     @Override
     public void setUserId(int userID, String userName){

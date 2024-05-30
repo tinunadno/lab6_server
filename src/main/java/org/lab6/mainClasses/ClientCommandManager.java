@@ -1,11 +1,9 @@
 package org.lab6.mainClasses;
 
-import org.lab6.Main;
+import org.lab6.mainClasses.UDPInteraction.Message;
+import org.lab6.mainClasses.UDPInteraction.SendedCommand;
 
-import java.net.InetAddress;
 import java.net.SocketAddress;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.UUID;
 
 public class ClientCommandManager extends Thread{

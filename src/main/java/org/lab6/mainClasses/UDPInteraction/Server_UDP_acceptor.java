@@ -1,4 +1,4 @@
-package org.lab6.mainClasses;
+package org.lab6.mainClasses.UDPInteraction;
 
 import java.io.*;
 import java.net.InetSocketAddress;
@@ -18,8 +18,8 @@ public class Server_UDP_acceptor implements Runnable {
             channel = DatagramChannel.open();
             address = new InetSocketAddress(port);
             channel.bind(address);
-            buffer = ByteBuffer.allocate(1024);
-            clientAcceptBuffer = ByteBuffer.allocate(1024);
+            buffer = ByteBuffer.allocate(10000);
+            clientAcceptBuffer = ByteBuffer.allocate(10000);
         } catch (IOException e) {
             e.printStackTrace();
         }

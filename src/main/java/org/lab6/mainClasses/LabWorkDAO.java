@@ -8,8 +8,8 @@ import java.nio.charset.StandardCharsets;
 import java.sql.*;
 
 public class LabWorkDAO {
-    private static String connectionUrl = "jdbc:postgresql://pg:5432/studs";
-    private static String user = "s409324";
+    private static String connectionUrl = "jdbc:postgresql://localhost:5432/labs";
+    private static String user = "postgres";
     private static String password = "IIcX*5966";
 
     public static synchronized void addLabWork(LabWork lw) throws SQLException {

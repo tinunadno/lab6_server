@@ -1,9 +1,7 @@
 package org.lab6.mainClasses;
 
-import org.lab6.Main;
+import org.lab6.mainClasses.UDPInteraction.Message;
 
-import java.net.InetAddress;
-import java.net.Socket;
 import java.net.SocketAddress;
 
 public class ResponseManager{

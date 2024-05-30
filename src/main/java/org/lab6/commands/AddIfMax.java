@@ -10,6 +10,7 @@ public class AddIfMax extends Command implements CommandWithParsedInstance, User
 	public AddIfMax(){
 		this.setRequiresLabWorkInstance(true);
 		this.setRequiresUserID(true);
+		this.setUserGUIAvailable(true);
 	}
 	@Override
 	public void setUserId(int userID, String userName){

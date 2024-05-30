@@ -7,6 +7,7 @@ public class Clear extends Command implements UserIdRequire{
 	private String userName;
 	public Clear(){
 		this.setRequiresUserID(true);
+		this.setUserGUIAvailable(true);
 	}
 	@Override
 	public void setUserId(int userID, String userName){

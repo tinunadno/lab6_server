@@ -1,9 +1,9 @@
 package org.lab6.mainClasses;
 
 import org.lab6.Main;
+import org.lab6.mainClasses.UDPInteraction.SendedCommand;
+import org.lab6.mainClasses.UDPInteraction.Server_UDP_acceptor;
 
-import java.net.InetAddress;
-import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;

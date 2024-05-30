@@ -12,6 +12,7 @@ public class Add extends Command implements CommandWithParsedInstance, UserIdReq
 	public Add(){
 		this.setRequiresUserID(true);
 		this.setRequiresLabWorkInstance(true);
+		this.setUserGUIAvailable(true);
 	}
 	@Override
 	public void setUserId(int userID, String userName){

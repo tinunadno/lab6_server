@@ -45,6 +45,7 @@ public class Controller {
         comands.put("authorize_name_r", new InsertUserNameRegister());
         comands.put("authorize_password_a", new InsertUserPasswordAuthorize());
         comands.put("authorize_password_r", new InsertUserPasswordRegister());
+        comands.put("get_user_available_commands", new getUserInterfaceAvailableCommands());
     }
 
     public Controller(ClientCommandManager clientThread, ResponseManager responseManager) {
@@ -153,5 +154,13 @@ public class Controller {
         commandListByTypes.add(commandsWithNoArgument);
         commandListByTypes.add(commandsWithNeedParse);
         return commandListByTypes;
+    }
+    public static ArrayList<String> getUserGUIAvailableCommandList(){
+        ArrayList<String> userGUIAvailableCommands=new ArrayList<>();
+        for (String key : comands.keySet()) {
+            if((comands.get(key)).isUserGUIAvailable())
+                userGUIAvailableCommands.add(key);
+        }
+        return userGUIAvailableCommands;
     }
 }

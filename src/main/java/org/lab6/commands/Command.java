@@ -4,7 +4,7 @@ import org.lab6.mainClasses.ResponseManager;
 
 public abstract class Command implements CommandNoArgument, RequireResponse{
     protected ResponseManager responseManager;
-
+    private boolean isUserGUIAvailable;
     private boolean requiresArgument=false;
     private boolean requiresLabWorkInstance=false;
     private boolean interruptsThread=false;
@@ -29,6 +29,7 @@ public abstract class Command implements CommandNoArgument, RequireResponse{
     protected void setInterruptsThread(boolean value){interruptsThread=value;}
     protected void setGivesResponse(boolean value){givesResponse=value;}
     protected void setRequiresUserID(boolean value){requiresUserID=value;}
+    protected void setUserGUIAvailable(boolean value){isUserGUIAvailable=value;}
 
 
     public boolean isRequiresArgument(){return requiresArgument;}
@@ -36,4 +37,5 @@ public abstract class Command implements CommandNoArgument, RequireResponse{
     public boolean isInterruptsThread(){return interruptsThread;}
     public boolean isGivesResponse(){return givesResponse;}
     public boolean isRequiresUserID(){return requiresUserID;}
+    public boolean isUserGUIAvailable(){return isUserGUIAvailable;}
 }

@@ -9,6 +9,7 @@ public class RemoveGreater extends Command implements CommandWithArgument, UserI
 	public RemoveGreater(){
 		this.setRequiresArgument(true);
 		this.setRequiresUserID(true);
+		this.setUserGUIAvailable(true);
 	}
 	@Override
 	public void setUserId(int userID, String userName){

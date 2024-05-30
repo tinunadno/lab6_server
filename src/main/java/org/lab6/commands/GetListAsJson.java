@@ -1,9 +1,6 @@
 package org.lab6.commands;
 
-import org.lab6.Main;
 import org.lab6.mainClasses.LabWorkListManager;
-import org.lab6.mainClasses.Message;
-import org.lab6.mainClasses.ResponseManager;
 
 import java.net.InetAddress;
 

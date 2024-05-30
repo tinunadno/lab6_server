@@ -1,10 +1,11 @@
 package org.lab6.commands;
 
 import org.lab6.mainClasses.LabWorkListManager;
-import org.lab6.mainClasses.Message;
-import org.lab6.mainClasses.ResponseManager;
 
 public class Info extends Command{
+	public Info(){
+		this.setUserGUIAvailable(true);
+	}
 	@Override
 	public void execute(){
 		responseManager.append(LabWorkListManager.getCollectionInfo());

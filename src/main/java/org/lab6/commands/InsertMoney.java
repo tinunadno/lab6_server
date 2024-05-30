@@ -14,6 +14,7 @@ public class InsertMoney extends Command implements CommandWithArgument, UserIdR
     public InsertMoney() {
         this.setRequiresArgument(true);
         this.setRequiresUserID(true);
+        this.setUserGUIAvailable(true);
     }
 
     @Override
