@@ -13,7 +13,7 @@ import java.util.Collections;
 public class LabWorkListManager {
 	private static ArrayList<LabWork> list;
 	private static java.time.LocalDate creationDate;
-
+	private static int totalListUpdate=0;
 	/**
 	 * initialize LabWork ArrayList
 	 */
@@ -32,6 +32,7 @@ public class LabWorkListManager {
 		try{
 			LabWorkDAO.addLabWork(lw);
 			list.add(lw);
+			totalListUpdate++;
 			responseManager.append("successfully added new instance");
 		}catch(SQLException e){
 			responseManager.append("SERVER_ERROR:can't add LabWork instance to DataBase");
@@ -55,6 +56,7 @@ public class LabWorkListManager {
 					lw.setUserName(list.get(i).getUserName());
 					lw.setCreationDate(list.get(i).getCreationDate());
 					list.set(i, lw);
+					totalListUpdate++;
 					responseManager.append("successfully updated instance with id "+id);
 				}catch (SQLException e){
 					//e.printStackTrace();
@@ -77,6 +79,7 @@ public class LabWorkListManager {
 			LabWorkDAO.remove(id, userID);
 
 			list.removeIf(lw->(lw.getID()==id));
+			totalListUpdate++;
 			responseManager.append("successfully removed instance with index " + id);
 		}
 		catch(SQLException e){
@@ -97,6 +100,7 @@ public class LabWorkListManager {
 
 			Person.clearPassportBase();
 			list.removeIf(lw->(lw.getUserID()==userID));
+			totalListUpdate++;
 			responseManager.append("successfully cleared LabWork Base");
 		}catch(SQLException e){
 			responseManager.append("SERVER_ERROR:can't clear LabWork instances of current user");
@@ -198,6 +202,7 @@ public class LabWorkListManager {
 							lw.setUserName(userName);
 						}
 					});
+			totalListUpdate++;
 			responseManager.append("successfully buyed LabWork with ID:"+lwID);
 		}catch (SQLException e){
 			//e.printStackTrace();
@@ -246,4 +251,5 @@ public class LabWorkListManager {
 		ret+=list.get(list.size()-1).toJson()+"\n]\n}";
 		return ret;
 	}
+	public static int getTotalListUpdate(){return totalListUpdate;}
 }

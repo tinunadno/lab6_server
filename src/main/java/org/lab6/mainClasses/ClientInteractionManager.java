@@ -1,6 +1,7 @@
 package org.lab6.mainClasses;
 
 import org.lab6.Main;
+import org.lab6.commands.UserIdRequire;
 import org.lab6.mainClasses.UDPInteraction.SendedCommand;
 import org.lab6.mainClasses.UDPInteraction.Server_UDP_acceptor;
 import org.lab6.storedClasses.LabWork;
@@ -8,10 +9,7 @@ import org.lab6.storedClasses.LabWork;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -19,7 +17,7 @@ public class ClientInteractionManager extends Thread{
     private Server_UDP_acceptor transmitter;
     private ExecutorService commandExecutor;
     private static ExecutorService sendingExecutor;
-    private HashMap<InetSocketAddress, ClientCommandManager> currentClients;
+    private HashMap<UUID, ClientCommandManager> currentClients;
     private static ClientInteractionManager cim;
     @Override
     public void run(){
@@ -40,14 +38,14 @@ public class ClientInteractionManager extends Thread{
         }
     }
     private void get(){
-        Object acceptedObject=transmitter.get();
-        InetSocketAddress userAddress=transmitter.getUserAdress();
-        if(currentClients.containsKey(userAddress)) {
-            currentClients.get(userAddress).setSendedCommand((SendedCommand) acceptedObject);
-            commandExecutor.submit(currentClients.get(userAddress));
+        SendedCommand acceptedObject=(SendedCommand) (transmitter.get());
+        UUID userToken=acceptedObject.getToken();
+        if(currentClients.containsKey(userToken)) {
+            currentClients.get(userToken).setSendedCommand(acceptedObject);
+            commandExecutor.submit(currentClients.get(userToken));
         }else{
-            ClientCommandManager ccm=new ClientCommandManager(userAddress);
-            currentClients.put(userAddress, ccm);
+            ClientCommandManager ccm=new ClientCommandManager(transmitter.getUserAdress());
+            currentClients.put(ccm.getUserToken(), ccm);
         }
     }
     public static void showUser(){
@@ -64,8 +62,5 @@ public class ClientInteractionManager extends Thread{
     }
     public void clearChannel(){
         transmitter.clearChannel();
-    }
-    public static Set<InetSocketAddress> getAddresses(){
-        return cim.currentClients.keySet();
     }
 }

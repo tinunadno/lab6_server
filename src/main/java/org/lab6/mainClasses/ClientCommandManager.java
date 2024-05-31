@@ -17,7 +17,9 @@ public class ClientCommandManager extends Thread{
     private ResponseManager responseManager;
     private boolean isAuthorized;
     private boolean isAuthorizedName;
+    private int totalListUpdate;
     public ClientCommandManager(InetSocketAddress address){
+        totalListUpdate=0;
         this.address=address;
         this.responseManager=new ResponseManager(address);
         controller=new Controller(this, responseManager);
@@ -53,7 +55,7 @@ public class ClientCommandManager extends Thread{
             responseManager.sendMessage();
         }
     }
-
+    public UUID getUserToken(){return userToken;}
     public void setIsAuthorized(boolean val){
         this.isAuthorized=val;
         ClientInteractionManager.showUser();
@@ -80,4 +82,6 @@ public class ClientCommandManager extends Thread{
         isAlive=false;
         ClientInteractionManager.removeConnectedUser(address);
     }
+    public int getTotalListUpdate(){return totalListUpdate;}
+    public void setTotalListUpdate(int value){totalListUpdate=value;}
 }
