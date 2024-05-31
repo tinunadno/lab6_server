@@ -46,6 +46,7 @@ public class Controller {
         comands.put("authorize_password_a", new InsertUserPasswordAuthorize());
         comands.put("authorize_password_r", new InsertUserPasswordRegister());
         comands.put("get_user_available_commands", new getUserInterfaceAvailableCommands());
+        comands.put("get_lab_work_list", new GetLabWorkList());
     }
 
     public Controller(ClientCommandManager clientThread, ResponseManager responseManager) {
@@ -142,12 +143,12 @@ public class Controller {
         ArrayList<String> commandsWithNeedParse = new ArrayList<>();
         for (Command value : comands.values()) {
             String commandName = value.getComment().substring(0, value.getComment().indexOf('%'));
-            if ((value instanceof CommandWithArgument) && (value instanceof CommandWithParsedInstance)) {
+            if ((value.isRequiresArgument()) && (value.isRequiresLabWorkInstance())) {
                 commandsWithNeedParse.add(commandName);
                 commandsWithArgument.add(commandName);
-            } else if (value instanceof CommandWithArgument) commandsWithArgument.add(commandName);
-            else if (value instanceof CommandWithParsedInstance) commandsWithNeedParse.add(commandName);
-            else commandsWithNoArgument.add(commandName);
+            } else if (value.isRequiresArgument()) commandsWithArgument.add(commandName);
+            else if (value.isRequiresLabWorkInstance()) commandsWithNeedParse.add(commandName);
+            if(!value.isRequiresArgument()) commandsWithNoArgument.add(commandName);
         }
         ArrayList<ArrayList<String>> commandListByTypes = new ArrayList<>();
         commandListByTypes.add(commandsWithArgument);

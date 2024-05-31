@@ -52,6 +52,7 @@ public class LabWorkListManager {
 					LabWorkDAO.update((int) list.get(i).getID(), userID, lw);
 					lw.setID((int) list.get(i).getID());
 					lw.setUserID(list.get(i).getUserID());
+					lw.setUserName(list.get(i).getUserName());
 					lw.setCreationDate(list.get(i).getCreationDate());
 					list.set(i, lw);
 					responseManager.append("successfully updated instance with id "+id);
@@ -95,8 +96,7 @@ public class LabWorkListManager {
 			LabWorkDAO.clear(userID);
 
 			Person.clearPassportBase();
-
-								list.removeIf(lw->(lw.getUserID()==userID));
+			list.removeIf(lw->(lw.getUserID()==userID));
 			responseManager.append("successfully cleared LabWork Base");
 		}catch(SQLException e){
 			responseManager.append("SERVER_ERROR:can't clear LabWork instances of current user");
@@ -232,7 +232,9 @@ public class LabWorkListManager {
 		}
 		return ret;
 	}
-
+	public static ArrayList<LabWork> getCollection(){
+		return list;
+	}
 	/**
 	 * get Collection as String in json format
 	 * @return

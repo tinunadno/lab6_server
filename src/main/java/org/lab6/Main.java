@@ -21,6 +21,7 @@ public class Main {
 
         LabWorkListManager.init();
         ClientInteractionManager cim=new ClientInteractionManager(port);
+        cim.start();
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
                 try {

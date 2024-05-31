@@ -3,11 +3,12 @@ package org.lab6.mainClasses;
 import org.lab6.mainClasses.UDPInteraction.Message;
 import org.lab6.mainClasses.UDPInteraction.SendedCommand;
 
+import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.UUID;
 
 public class ClientCommandManager extends Thread{
-    private SocketAddress address;
+    private InetSocketAddress address;
     private Controller controller;
     private boolean isAlive;
     private int userID;
@@ -16,7 +17,7 @@ public class ClientCommandManager extends Thread{
     private ResponseManager responseManager;
     private boolean isAuthorized;
     private boolean isAuthorizedName;
-    public ClientCommandManager(SocketAddress address){
+    public ClientCommandManager(InetSocketAddress address){
         this.address=address;
         this.responseManager=new ResponseManager(address);
         controller=new Controller(this, responseManager);
@@ -68,7 +69,7 @@ public class ClientCommandManager extends Thread{
         this.userID=ID;
         controller.setUserID(ID);
     }
-    public SocketAddress getUserAddress(){return address;}
+    public InetSocketAddress getUserAddress(){return address;}
     public int getUserId(){return userID;}
     public String getUserName(){return this.userName;}
     @Override

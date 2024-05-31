@@ -3,18 +3,28 @@ package org.lab6.mainClasses;
 import org.lab6.Main;
 import org.lab6.mainClasses.UDPInteraction.SendedCommand;
 import org.lab6.mainClasses.UDPInteraction.Server_UDP_acceptor;
+import org.lab6.storedClasses.LabWork;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ClientInteractionManager {
+public class ClientInteractionManager extends Thread{
     private Server_UDP_acceptor transmitter;
     private ExecutorService commandExecutor;
     private static ExecutorService sendingExecutor;
-    private HashMap<SocketAddress, ClientCommandManager> currentClients;
+    private HashMap<InetSocketAddress, ClientCommandManager> currentClients;
     private static ClientInteractionManager cim;
+    @Override
+    public void run(){
+        startMonitor();
+    }
     public void startMonitor(){
         while(Main.isRunning()){
             get();
@@ -27,12 +37,11 @@ public class ClientInteractionManager {
             commandExecutor = Executors.newCachedThreadPool();
             sendingExecutor=Executors.newFixedThreadPool(10);
             cim=this;
-            this.startMonitor();
         }
     }
     private void get(){
         Object acceptedObject=transmitter.get();
-        SocketAddress userAddress=transmitter.getUserAdress();
+        InetSocketAddress userAddress=transmitter.getUserAdress();
         if(currentClients.containsKey(userAddress)) {
             currentClients.get(userAddress).setSendedCommand((SendedCommand) acceptedObject);
             commandExecutor.submit(currentClients.get(userAddress));
@@ -55,5 +64,8 @@ public class ClientInteractionManager {
     }
     public void clearChannel(){
         transmitter.clearChannel();
+    }
+    public static Set<InetSocketAddress> getAddresses(){
+        return cim.currentClients.keySet();
     }
 }
